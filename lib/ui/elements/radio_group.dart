@@ -26,7 +26,10 @@ class RadioGroupElement extends StatelessWidget {
       list.add(ReactiveRadioListTile(
         formControlName: element.name!,
         value: choice.value,
-        title: Text(choice.text ?? choice.value?.toString() ?? ''),
+        title: Text(
+          choice.text ?? choice.value?.toString() ?? '',
+          style: Theme.of(context).textTheme.bodyText2,
+        ),
       ));
     });
     return Column(

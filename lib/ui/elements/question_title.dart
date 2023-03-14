@@ -24,17 +24,8 @@ class QuestionTitle extends StatelessWidget {
       } else
         return Container();
     };
-    final titleTextStyle = () {
-      return SurveyProvider.of(context)
-              .stylesConfiguration
-              ?.questionTitleTextStyle ??
-          TextStyle(
-              fontSize: 16.0,
-              fontFamily: 'SF-UI-Text',
-              fontWeight: FontWeight.w900,
-              color: Theme.of(context).disabledColor //Color(0xff242833)
-              );
-    };
+
+    final textStyle = Theme.of(context).textTheme.bodyText1;
 
     final title = () {
       List<Widget> listTitle = <Widget>[];
@@ -44,7 +35,7 @@ class QuestionTitle extends StatelessWidget {
         if (status != null && status.indexAll != null) {
           return Text(
             '${status.indexAll! + 1}.',
-            style: titleTextStyle(),
+            style: textStyle,
           );
         }
         return Container();
@@ -60,7 +51,7 @@ class QuestionTitle extends StatelessWidget {
       listTitle.add(Expanded(
           child: Text(
         '${q.title ?? q.name ?? ""}',
-        style: titleTextStyle(),
+        style: textStyle,
       )));
 
       return Column(
