@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_survey_js/generated/l10n.dart';
 import 'package:flutter_survey_js/model/survey.dart' as s;
-import 'package:flutter_survey_js/ui/survey_styles_configuration.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:logging/logging.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -170,7 +169,6 @@ class SurveyWidgetState extends State<SurveyWidget> {
         survey: widget.survey,
         formGroup: formGroup,
         elementsState: elementsState,
-        stylesConfiguration: widget.stylesConfiguration,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -298,13 +296,11 @@ class SurveyProvider extends InheritedWidget {
   final s.Survey survey;
   final FormGroup formGroup;
   final ElementsState elementsState;
-  final SurveyStylesConfiguration? stylesConfiguration;
   SurveyProvider({
     required this.elementsState,
     required this.child,
     required this.survey,
     required this.formGroup,
-    this.stylesConfiguration,
   }) : super(child: child);
 
   static SurveyProvider of(BuildContext context) {
