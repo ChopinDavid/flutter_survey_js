@@ -10,10 +10,18 @@ final SurveyElementBuilder ratingBuilder =
     (context, element, {bool hasTitle = true}) {
   final e = element as s.Rating;
 
+  final textStyle = Theme.of(context)
+      .textTheme
+      .bodyText2
+      ?.copyWith(color: Theme.of(context).primaryColor);
+
   final children = <Object, Widget>{};
   if (e.rateValues != null && e.rateValues!.length > 0) {
     for (final v in e.rateValues!) {
-      children[v.value] = Text(v.text ?? v.value?.toString() ?? '');
+      children[v.value] = Text(
+        v.text ?? v.value?.toString() ?? '',
+        style: textStyle,
+      );
     }
   } else {
     //use max, min,step
@@ -22,7 +30,10 @@ final SurveyElementBuilder ratingBuilder =
     final step = e.rateStep ?? 1;
     var current = min;
     while (current <= maxValue) {
-      children[current] = Text(current.toString());
+      children[current] = Text(
+        current.toString(),
+        style: textStyle,
+      );
       current += step;
     }
   }
