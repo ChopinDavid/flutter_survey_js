@@ -25,12 +25,15 @@ class QuestionTitle extends StatelessWidget {
         return Container();
     };
     final titleTextStyle = () {
-      return TextStyle(
-          fontSize: 16.0,
-          fontFamily: 'SF-UI-Text',
-          fontWeight: FontWeight.w900,
-          color: Theme.of(context).disabledColor //Color(0xff242833)
-          );
+      return SurveyProvider.of(context)
+              .stylesConfiguration
+              ?.questionTitleTextStyle ??
+          TextStyle(
+              fontSize: 16.0,
+              fontFamily: 'SF-UI-Text',
+              fontWeight: FontWeight.w900,
+              color: Theme.of(context).disabledColor //Color(0xff242833)
+              );
     };
 
     final title = () {
