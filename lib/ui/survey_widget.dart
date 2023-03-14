@@ -21,15 +21,11 @@ class SurveyWidget extends StatefulWidget {
   final bool showQuestionsInOnePage;
   final SurveyController? controller;
   final bool hideSubmitButton;
-<<<<<<< HEAD
   final Widget Function(BuildContext context, s.Survey survey)?
       surveyTitleBuilder;
   final Widget Function(BuildContext context, int pageCount, int currentPage)?
       stepperBuilder;
   final Widget Function(BuildContext context, s.Page page)? pageBuilder;
-=======
-  final SurveyStylesConfiguration? stylesConfiguration;
->>>>>>> 5b51333 (Made basic SurveyStylesConfiguration that trickles down Survey widget's descendants to add custom styling to QuestionTitles - DC)
 
   const SurveyWidget({
     Key? key,
@@ -40,13 +36,9 @@ class SurveyWidget extends StatefulWidget {
     this.showQuestionsInOnePage = false,
     this.controller,
     this.hideSubmitButton = false,
-<<<<<<< HEAD
     this.surveyTitleBuilder,
     this.stepperBuilder,
     this.pageBuilder,
-=======
-    this.stylesConfiguration,
->>>>>>> 5b51333 (Made basic SurveyStylesConfiguration that trickles down Survey widget's descendants to add custom styling to QuestionTitles - DC)
   }) : super(key: key);
   @override
   State<StatefulWidget> createState() => SurveyWidgetState();
