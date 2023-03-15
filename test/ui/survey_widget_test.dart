@@ -22,9 +22,6 @@ main() {
           ],
           home: Material(
             child: SurveyWidget(
-              surveyStylesConfiguration: SurveyStylesConfiguration(
-                showSurveyTitle: true,
-              ),
               survey: TestData.survey(
                 title: title,
                 pages: [
@@ -57,9 +54,6 @@ main() {
           ],
           home: Material(
             child: SurveyWidget(
-              surveyStylesConfiguration: SurveyStylesConfiguration(
-                showSurveyTitle: false,
-              ),
               survey: TestData.survey(
                 title: title,
                 pages: [

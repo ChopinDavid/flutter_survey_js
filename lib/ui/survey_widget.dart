@@ -167,7 +167,6 @@ class SurveyWidgetState extends State<SurveyWidget> {
     }
     final elementsState = ElementsState(status);
     return SurveyProvider(
-        surveyStylesConfiguration: widget.surveyStylesConfiguration,
         survey: widget.survey,
         formGroup: formGroup,
         elementsState: elementsState,
@@ -298,13 +297,11 @@ class SurveyProvider extends InheritedWidget {
   final s.Survey survey;
   final FormGroup formGroup;
   final ElementsState elementsState;
-  final SurveyStylesConfiguration surveyStylesConfiguration;
   SurveyProvider({
     required this.elementsState,
     required this.child,
     required this.survey,
     required this.formGroup,
-    required this.surveyStylesConfiguration,
   }) : super(child: child);
 
   static SurveyProvider of(BuildContext context) {

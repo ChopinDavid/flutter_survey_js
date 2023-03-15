@@ -37,13 +37,13 @@ class QuestionTitle extends StatelessWidget {
               status.indexAll != null) {
             return Text(
               '${status.indexAll! + 1}.',
-              style: titleTextStyle(),
+              style: textStyle,
             );
           } else if (survey.survey.showQuestionNumbers == "onPage" &&
               status.indexInPage != null) {
             return Text(
               '${status.indexInPage! + 1}.',
-              style: titleTextStyle(),
+              style: textStyle,
             );
           }
         }
