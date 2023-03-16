@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_survey_js/generated/l10n.dart';
 import 'package:flutter_survey_js/model/survey.dart' as s;
-import 'package:flutter_survey_js/ui/survey_styles_configuration.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:logging/logging.dart';
 import 'package:reactive_forms/reactive_forms.dart';
