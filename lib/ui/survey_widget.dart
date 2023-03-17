@@ -91,8 +91,7 @@ class SurveyWidgetState extends State<SurveyWidget> {
                     title: Text(widget.survey.title!),
                   ),
                 ),
-        Expanded(
-            child: ReactiveForm(
+        ReactiveForm(
           formGroup: this.formGroup,
           child: StreamBuilder(
             stream: this.formGroup.valueChanges,
@@ -101,7 +100,7 @@ class SurveyWidgetState extends State<SurveyWidget> {
               return rebuildPages();
             },
           ),
-        ))
+        )
       ],
     );
   }
@@ -213,9 +212,7 @@ class SurveyWidgetState extends State<SurveyWidget> {
                     ),
 
             /// Jump buttons.
-            Expanded(
-              child: buildPages(),
-            ),
+            buildPages(),
 
             if (widget.isScrollable) nextPrevButtonsRow()
           ],
