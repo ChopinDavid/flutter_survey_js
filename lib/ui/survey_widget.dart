@@ -4,13 +4,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_survey_js/generated/l10n.dart';
 import 'package:flutter_survey_js/model/survey.dart' as s;
-import 'package:flutter_survey_js/ui/panel_title.dart';
 import 'package:flutter_survey_js/ui/survey_page_widget.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:logging/logging.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import 'elements/survey_element_factory.dart';
 import 'elements_state.dart';
 import 'form_control.dart';
 
@@ -51,7 +49,7 @@ class SurveyWidgetState extends State<SurveyWidget> {
   final Logger logger = Logger('SurveyWidgetState');
   late FormGroup formGroup;
   late Map<s.ElementBase, Object> _controlsMap;
-  late PageController pageController;
+  late PageController? pageController;
 
   late int pageCount;
 
@@ -65,12 +63,19 @@ class SurveyWidgetState extends State<SurveyWidget> {
   void initState() {
     super.initState();
     widget.controller?._bind(this);
+    _setPageCount();
     rebuildForm();
+  }
+
+  void _setPageCount() {
+    pageCount = widget.survey.questions == null
+        ? (widget.survey.pages ?? []).length
+        : 1;
   }
 
   Future<void> toPage(int newPage) async {
     final p = min(pageCount - 1, max(0, newPage));
-    await pageController.animateToPage(p,
+    await pageController?.animateToPage(p,
         duration: Duration(milliseconds: 100), curve: Curves.easeIn);
   }
 
@@ -106,16 +111,19 @@ class SurveyWidgetState extends State<SurveyWidget> {
     _listener?.cancel();
     //clear
     _controlsMap = {};
-    pageController = PageController(
-      initialPage: _currentPage,
-      keepPage: true,
-    );
     _currentPage = 0;
-    pageController.addListener(() {
-      setState(() {
-        _currentPage = pageController.page!.toInt();
+    if (pageCount > 1) {
+      pageController = PageController(
+        initialPage: _currentPage,
+        keepPage: true,
+      );
+      pageController!.addListener(() {
+        setState(() {
+          _currentPage = pageController!.page!.toInt();
+        });
       });
-    });
+    }
+
     this.formGroup = elementsToFormGroup(widget.survey.getElements(),
         controlsMap: _controlsMap);
 
@@ -164,9 +172,7 @@ class SurveyWidgetState extends State<SurveyWidget> {
 
   Widget rebuildPages() {
     //TODO recalculate page count and visible
-    pageCount = widget.survey.questions == null
-        ? (widget.survey.pages ?? []).length
-        : 1;
+    _setPageCount();
     //TODO calculate status
 
     Map<s.ElementBase, ElementStatus> status = {};
@@ -233,66 +239,24 @@ class SurveyWidgetState extends State<SurveyWidget> {
   }
 
   Widget buildPages() {
-    IndexedWidgetBuilder itemBuilder(s.Page page) {
-      return (context, index) {
-        if (index < page.elements!.length && index >= 0) {
-          return SurveyElementFactory().resolve(context, page.elements![index]);
-        } else {
-          return Container(
-            width: double.infinity,
-            // child: Image.asset(
-            //   'assets/images/decision.jpg',
-            //   fit: BoxFit.fill,
-            // ),
-          );
-        }
-      };
+    Widget itemBuilder(BuildContext context, int index) {
+      final currentPage = pages[index];
+      //build elements
+      return widget.pageBuilder != null
+          ? widget.pageBuilder!(context, currentPage)
+          : SurveyPageWidget(
+              page: currentPage,
+              key: ObjectKey(currentPage),
+            );
     }
 
-    final IndexedWidgetBuilder separatorBuilder =
-        (BuildContext context, int index) {
-      return SurveyElementFactory().separatorBuilder.call(context);
-    };
-    return PageView.builder(
-      controller: pageController,
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (BuildContext context, int index) {
-        final currentPage = pages[index];
-        //build elements
-        return widget.pageBuilder != null
-            ? widget.pageBuilder!(context, currentPage)
-            : widget.isScrollable
-                ? SurveyPageWidget(
-                    page: currentPage,
-                    key: ObjectKey(currentPage),
-                    itemBuilder: itemBuilder(currentPage),
-                    separatorBuilder: separatorBuilder,
-                  )
-                : Column(
-                    children: [
-                      if (currentPage.title != null ||
-                          currentPage.description != null)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: PanelTitle(
-                            panel: currentPage,
-                            onTimeout: () {
-                              setState(() {});
-                            },
-                          ),
-                        ),
-                      ListView.separated(
-                        itemBuilder: itemBuilder(currentPage),
-                        separatorBuilder: separatorBuilder,
-                        itemCount: currentPage.elements?.length ?? 0,
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                      ),
-                      nextPrevButtonsRow
-                    ],
-                  );
-      },
-    );
+    return pageCount < 2
+        ? itemBuilder(context, 0)
+        : PageView.builder(
+            controller: pageController,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: itemBuilder,
+          );
   }
 
   /// Returns the next button widget.
