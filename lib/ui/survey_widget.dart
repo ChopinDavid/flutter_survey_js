@@ -81,6 +81,16 @@ class SurveyWidgetState extends State<SurveyWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final reactiveForm = ReactiveForm(
+      formGroup: this.formGroup,
+      child: StreamBuilder(
+        stream: this.formGroup.valueChanges,
+        builder: (BuildContext context,
+            AsyncSnapshot<Map<String, Object?>?> snapshot) {
+          return rebuildPages();
+        },
+      ),
+    );
     return Column(
       children: [
         if (widget.survey.title != null)
@@ -91,16 +101,8 @@ class SurveyWidgetState extends State<SurveyWidget> {
                     title: Text(widget.survey.title!),
                   ),
                 ),
-        ReactiveForm(
-          formGroup: this.formGroup,
-          child: StreamBuilder(
-            stream: this.formGroup.valueChanges,
-            builder: (BuildContext context,
-                AsyncSnapshot<Map<String, Object?>?> snapshot) {
-              return rebuildPages();
-            },
-          ),
-        )
+        if (widget.isScrollable) Expanded(child: reactiveForm),
+        if (!widget.isScrollable) reactiveForm,
       ],
     );
   }
@@ -212,7 +214,8 @@ class SurveyWidgetState extends State<SurveyWidget> {
                     ),
 
             /// Jump buttons.
-            buildPages(),
+            if (widget.isScrollable) Expanded(child: buildPages()),
+            if (!widget.isScrollable) buildPages(),
 
             if (widget.isScrollable) nextPrevButtonsRow()
           ],
