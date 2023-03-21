@@ -24,8 +24,14 @@ class QuestionTitle extends StatelessWidget {
       } else
         return Container();
     };
-
-    final textStyle = Theme.of(context).textTheme.bodyText1;
+    final titleTextStyle = () {
+      return TextStyle(
+          fontSize: 16.0,
+          fontFamily: 'SF-UI-Text',
+          fontWeight: FontWeight.w900,
+          color: Theme.of(context).disabledColor //Color(0xff242833)
+          );
+    };
 
     final title = () {
       List<Widget> listTitle = <Widget>[];
@@ -37,13 +43,13 @@ class QuestionTitle extends StatelessWidget {
               status.indexAll != null) {
             return Text(
               '${status.indexAll! + 1}.',
-              style: textStyle,
+              style: titleTextStyle(),
             );
           } else if (survey.survey.showQuestionNumbers == "onPage" &&
               status.indexInPage != null) {
             return Text(
               '${status.indexInPage! + 1}.',
-              style: textStyle,
+              style: titleTextStyle(),
             );
           }
         }
@@ -61,7 +67,7 @@ class QuestionTitle extends StatelessWidget {
       listTitle.add(Expanded(
           child: Text(
         '${q.title ?? q.name ?? ""}',
-        style: textStyle,
+        style: titleTextStyle(),
       )));
 
       return Column(
