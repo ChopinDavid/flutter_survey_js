@@ -102,15 +102,9 @@ class SurveyElementFactory {
       return ReactiveDropdownField(
         formControlName: element.name!,
         items: e.choices
-                ?.map(
-                  (e) => DropdownMenuItem(
+                ?.map((e) => DropdownMenuItem(
                     value: e.value,
-                    child: Text(
-                      e.text ?? e.value?.toString() ?? '',
-                      style: Theme.of(context).textTheme.bodyText2,
-                    ),
-                  ),
-                )
+                    child: Text(e.text ?? e.value?.toString() ?? "")))
                 .toList(growable: false) ??
             [],
       ).wrapQuestionTitle(element, hasTitle: hasTitle);
@@ -137,10 +131,7 @@ class SurveyElementFactory {
     });
 
     unsupported = (context, element, {bool hasTitle = true}) => Container(
-          child: Text(
-            'Unsupported ${element.name ?? ""}',
-            style: Theme.of(context).textTheme.bodyText2,
-          ),
+          child: Text('Unsupported ${element.name ?? ""}'),
         ).wrapQuestionTitle(element, hasTitle: hasTitle);
   }
 
