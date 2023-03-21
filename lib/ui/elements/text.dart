@@ -16,15 +16,11 @@ final SurveyElementBuilder textBuilder =
     style: Theme.of(context).textTheme.bodyText2,
   );
 
-  final datePickerTextStyle = Theme.of(context).textTheme.bodyText2;
-
   if (e.inputType == 'date') {
     widget = ReactiveDateTimePicker(
-      locale: Localizations.localeOf(context),
-      formControlName: element.name!,
-      type: ReactiveDatePickerFieldType.date,
-      style: datePickerTextStyle,
-    );
+        locale: Localizations.localeOf(context),
+        formControlName: element.name!,
+        type: ReactiveDatePickerFieldType.date);
   }
   if (e.inputType == 'color') {
     widget = ReactiveColorPicker(formControlName: element.name!);
@@ -37,19 +33,15 @@ final SurveyElementBuilder textBuilder =
   }
   if (e.inputType == 'datetime') {
     widget = ReactiveDateTimePicker(
-      locale: Localizations.localeOf(context),
-      formControlName: element.name!,
-      type: ReactiveDatePickerFieldType.dateTime,
-      style: datePickerTextStyle,
-    );
+        locale: Localizations.localeOf(context),
+        formControlName: element.name!,
+        type: ReactiveDatePickerFieldType.dateTime);
   }
   if (e.inputType == 'datetime-local') {
     widget = ReactiveDateTimePicker(
-      locale: Localizations.localeOf(context),
-      formControlName: element.name!,
-      type: ReactiveDatePickerFieldType.dateTime,
-      style: datePickerTextStyle,
-    );
+        locale: Localizations.localeOf(context),
+        formControlName: element.name!,
+        type: ReactiveDatePickerFieldType.dateTime);
   }
   if (e.inputType == 'month') {
     //TODO
