@@ -28,10 +28,7 @@ class CheckBoxElement extends StatelessWidget {
           (element.choices ?? []).forEach((element) {
             list.add(CheckboxListTile(
               value: formArray.controls.any((c) => c.value == element.value),
-              title: Text(
-                element.text ?? element.value?.toString() ?? '',
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
+              title: Text(element.text ?? element.value?.toString() ?? ''),
               onChanged: (v) {
                 if (v == true) {
                   formArray.add(FormControl<Object>(value: element.value));
