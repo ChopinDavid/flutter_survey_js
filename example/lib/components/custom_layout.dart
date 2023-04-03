@@ -82,7 +82,9 @@ class CustomLayoutState extends State<CustomLayout> {
     IndexedWidgetBuilder itemBuilder(s.Page page) {
       return (context, index) {
         if (index < page.elements!.length && index >= 0) {
-          return SurveyElementFactory().resolve(context, page.elements![index]);
+          Widget? element =
+              SurveyElementFactory().resolve(context, page.elements![index]);
+          return element != null ? element : Container(width: double.infinity);
         } else {
           return Container(
             width: double.infinity,

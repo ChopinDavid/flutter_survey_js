@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_survey_js/model/survey.dart' as s;
+import 'package:flutter_survey_js/survey.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'elements/survey_element_factory.dart';
@@ -125,19 +126,33 @@ class SurveyPageWidgetState extends State<SurveyPageWidget> {
                     itemPositionsListener: itemPositionsListener,
                     itemBuilder: (context, index) {
                       if (index < widget.page.elements!.length && index >= 0) {
-                        return SurveyElementFactory()
+                        final surveyElement = SurveyElementFactory()
                             .resolve(context, widget.page.elements![index]);
+                        return surveyElement == null
+                            ? Container(
+                                width: double.infinity,
+                              )
+                            : surveyElement;
                       } else {
                         return Container(
                           width: double.infinity,
-                          // child: Image.asset(
-                          //   'assets/images/decision.jpg',
-                          //   fit: BoxFit.fill,
-                          // ),
                         );
                       }
                     },
                     separatorBuilder: (BuildContext context, int index) {
+                      final ElementBase element = widget.page.elements![index];
+                      if (element is s.Question) {
+                        if (element.isVisible(
+                            SurveyProvider.of(context).formGroup.value)) {
+                          return SurveyElementFactory()
+                              .separatorBuilder
+                              .call(context);
+                        } else {
+                          return Container(
+                            width: double.infinity,
+                          );
+                        }
+                      }
                       return SurveyElementFactory()
                           .separatorBuilder
                           .call(context);

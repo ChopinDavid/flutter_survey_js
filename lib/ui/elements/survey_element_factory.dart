@@ -8,6 +8,7 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 import 'package:logging/logging.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../survey_widget.dart';
 import 'checkbox.dart';
 import 'image.dart';
 import 'matrix.dart';
@@ -20,7 +21,7 @@ import 'ranking.dart';
 import 'rating.dart';
 import 'text.dart';
 
-typedef SurveyElementBuilder = Widget
+typedef SurveyElementBuilder = Widget?
     Function(BuildContext context, s.ElementBase element, {bool hasTitle});
 typedef SurveyFormControlBuilder = Object? Function(s.ElementBase element,
     {List<ValidatorFunction> validators});
@@ -160,8 +161,13 @@ class SurveyElementFactory {
     }
   }
 
-  Widget resolve(BuildContext context, s.ElementBase element,
+  Widget? resolve(BuildContext context, s.ElementBase element,
       {bool hasTitle = true}) {
+    if (element is s.Question) {
+      if (!element.isVisible(SurveyProvider.of(context).formGroup.value)) {
+        return null;
+      }
+    }
     final t = element.runtimeType;
     var res = _map[t];
     if (res == null) {

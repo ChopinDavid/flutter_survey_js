@@ -65,29 +65,37 @@ class MatrixDynamicElement extends StatelessWidget {
                     )
                   : null,
               children: [
-                ...(matrix.columns ?? []).map((column) {
-                  final q = matrixDropdownColumnToQuestion(matrix, column);
-                  final v = questionToValidators(q);
+                ...(matrix.columns ?? [])
+                    .map((column) {
+                      final q = matrixDropdownColumnToQuestion(matrix, column);
+                      final v = questionToValidators(q);
+                      final element = SurveyElementFactory()
+                          .resolve(context, q, hasTitle: false);
 
-                  return TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: ReactiveNestedForm(
-                        formGroup: c,
-                        child: Builder(
-                          builder: (context) {
-                            final fg = ReactiveForm.of(context) as FormGroup;
-                            final c = fg.control(column.name!);
-                            //concat validators
-                            // final newV = HashSet<ValidatorFunction>.of(
-                            //     [...c.validators, ...v]).toList();
-                            //TODO runner
-                            c.setValidators(v);
-                            return SurveyElementFactory()
-                                .resolve(context, q, hasTitle: false);
-                          },
-                        ),
-                      ));
-                }).toList(),
+                      return element == null
+                          ? null
+                          : TableCell(
+                              verticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              child: ReactiveNestedForm(
+                                formGroup: c,
+                                child: Builder(
+                                  builder: (context) {
+                                    final fg =
+                                        ReactiveForm.of(context) as FormGroup;
+                                    final c = fg.control(column.name!);
+                                    //concat validators
+                                    // final newV = HashSet<ValidatorFunction>.of(
+                                    //     [...c.validators, ...v]).toList();
+                                    //TODO runner
+                                    c.setValidators(v);
+                                    return element;
+                                  },
+                                ),
+                              ));
+                    })
+                    .toList()
+                    .removeWhere((element) => element == null) as List<Widget>,
                 TableCell(
                   child: SizedBox(
                       width: actionSize,
