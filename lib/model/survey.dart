@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../data/visibility_helper.dart';
+
 part 'element.dart';
 part 'expression.dart';
 part 'expression_item.dart';
