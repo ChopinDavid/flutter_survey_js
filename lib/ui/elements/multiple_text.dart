@@ -40,8 +40,7 @@ final SurveyFormControlBuilder multipleTextControlBuilder =
 };
 
 s.Text toText(s.MultipleTextItem multipleTextItem) {
-  return s.Text()
-    ..name = multipleTextItem.name
+  return s.Text(name: multipleTextItem.name)
     ..isRequired = multipleTextItem.isRequired
     ..validators = multipleTextItem.validators
     ..inputType = multipleTextItem.inputType

@@ -2,11 +2,11 @@ part of 'survey.dart';
 
 abstract class Question extends ElementBase {
   @override
-  String? type;
+  final String type;
   // "default",       "collapsed",         "expanded"
   String? state;
   @override
-  String? name;
+  final String name;
   bool? visible;
   bool? useDisplayValuesInTitle;
   String? visibleIf;
@@ -36,4 +36,6 @@ abstract class Question extends ElementBase {
   List<SurveyValidator>? validators;
   String? bindings;
   String? renderAs;
+
+  Question({required this.type, required this.name});
 }

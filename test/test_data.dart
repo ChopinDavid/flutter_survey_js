@@ -150,9 +150,10 @@ class TestData {
         ..expression = expression ?? 'some expression'
         ..html = html ?? 'some html';
   static ElementBase elementBase({String? type, String? name}) =>
-      TestElementBase()
-        ..type = type ?? 'some type'
-        ..name = name ?? 'some name';
+      TestElementBase(
+        name: name ?? 'some name',
+        type: type ?? 'some type',
+      );
   static Page page(
           {String? name,
           List<ElementBase>? elements,
@@ -169,8 +170,7 @@ class TestData {
           int? maxTimeToFinish,
           String? navigationTitle,
           String? navigationDescription}) =>
-      Page()
-        ..name = name ?? 'some name'
+      Page(name: name ?? 'some name')
         ..elements = elements ?? [elementBase()]
         ..visible = visible ?? false
         ..visibleIf = visibleIf ?? 'some visibleIf'
@@ -213,9 +213,11 @@ class TestData {
 
 class TestElementBase extends ElementBase {
   @override
-  String? type;
+  String type;
   @override
-  String? name;
+  String name;
+
+  TestElementBase({required this.name, required this.type});
 
   @override
   Map<String, dynamic> toJson() {

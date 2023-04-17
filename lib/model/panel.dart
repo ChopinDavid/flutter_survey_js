@@ -5,7 +5,7 @@ class Panel extends PanelBase {
   static const $type = "panel";
 
   @override
-  String? get type => $type;
+  String get type => $type;
 
   //   "default",
   // "collapsed",
@@ -24,7 +24,7 @@ class Panel extends PanelBase {
   // "off"
   String? showQuestionNumbers;
   String? questionStartIndex;
-  Panel();
+  Panel({required String name}) : super(name: name);
   factory Panel.fromJson(Map<String, dynamic> json) => _$PanelFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$PanelToJson(this);
@@ -35,7 +35,7 @@ class PanelDynamic extends Question {
   static const $type = "paneldynamic";
 
   @override
-  String? get type => $type;
+  String get type => $type;
   List<ElementBase>? templateElements;
   String? templateTitle;
   String? templateDescription;
@@ -77,7 +77,7 @@ class PanelDynamic extends Question {
   //   "bottom",
   // "right"
   String? panelRemoveButtonLocation;
-  PanelDynamic();
+  PanelDynamic({required String name}) : super(type: $type, name: name);
   factory PanelDynamic.fromJson(Map<String, dynamic> json) =>
       _$PanelDynamicFromJson(json);
   @override

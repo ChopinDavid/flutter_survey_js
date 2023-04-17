@@ -1,9 +1,9 @@
 part of 'survey.dart';
 
 abstract class ElementBase {
-  String? get type;
+  String get type;
 
-  String? get name;
+  String get name;
 
   ElementBase();
 
@@ -79,9 +79,9 @@ class UnsupportedElement extends ElementBase {
   });
 
   @override
-  final String? type;
+  final String type;
   @override
-  final String? name;
+  final String name;
   final String? title;
 
   @override

@@ -149,7 +149,7 @@ class SurveyLayoutState extends State<SurveyLayout> {
       pages = survey.pages ?? [];
     } else {
       pages = [
-        s.Page()
+        s.Page(name: '')
           ..elements = (survey.pages ?? [])
               .map<List<s.ElementBase>>((e) => e.elements ?? <s.ElementBase>[])
               .fold(<s.ElementBase>[],

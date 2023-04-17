@@ -4,7 +4,7 @@ part of 'survey.dart';
 class MatrixDropdown extends MatrixDropdownBase {
   static const $type = "matrixdropdown";
   @override
-  String? get type => $type;
+  String get type => $type;
 
   @JsonKey(fromJson: ItemValue.fromListJson)
   List<ItemValue>? rows;
@@ -12,7 +12,7 @@ class MatrixDropdown extends MatrixDropdownBase {
   String? rowsVisibleIf;
   String? rowTitleWidth;
   String? totalText;
-  MatrixDropdown();
+  MatrixDropdown({required String name}) : super(name: name);
   factory MatrixDropdown.fromJson(Map<String, dynamic> json) =>
       _$MatrixDropdownFromJson(json);
   @override
@@ -23,7 +23,7 @@ class MatrixDropdown extends MatrixDropdownBase {
 class MatrixDynamic extends MatrixDropdownBase {
   static const $type = "matrixdynamic";
   @override
-  String? get type => $type;
+  String get type => $type;
 
   @override
   String? rowsVisibleIf;
@@ -47,7 +47,7 @@ class MatrixDynamic extends MatrixDropdownBase {
   bool? hideColumnsIfEmpty;
   String? emptyRowsText;
 
-  MatrixDynamic();
+  MatrixDynamic({required String name}) : super(name: name);
   factory MatrixDynamic.fromJson(Map<String, dynamic> json) =>
       _$MatrixDynamicFromJson(json);
   @override
@@ -58,7 +58,7 @@ class MatrixDynamic extends MatrixDropdownBase {
 class Matrix extends MatrixBase {
   static const $type = "matrix";
   @override
-  String? get type => $type;
+  String get type => $type;
   @JsonKey(fromJson: ItemValue.fromListJson)
   List<ItemValue>? columns;
   @JsonKey(fromJson: ItemValue.fromListJson)
@@ -70,7 +70,7 @@ class Matrix extends MatrixBase {
   bool? isAllRowRequired;
   bool? hideIfRowsEmpty;
 
-  Matrix();
+  Matrix({required String name}) : super(type: $type, name: name);
   factory Matrix.fromJson(Map<String, dynamic> json) => _$MatrixFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$MatrixToJson(this);
@@ -79,7 +79,7 @@ class Matrix extends MatrixBase {
 abstract class MatrixDropdownBase extends MatrixBase {
   static const $type = "matrixrropdownbase";
   @override
-  String? get type => $type;
+  String get type => $type;
   List<MatrixDropdownColumn>? columns;
   //     "horizontal",   "vertical"
   String? columnLayout;
@@ -97,7 +97,7 @@ abstract class MatrixDropdownBase extends MatrixBase {
   int? columnColCount;
   String? columnMinWidth;
 
-  MatrixDropdownBase();
+  MatrixDropdownBase({required String name}) : super(type: $type, name: name);
 
   @override
   Map<String, dynamic> toJson();
@@ -325,4 +325,7 @@ abstract class MatrixBase extends Question {
   String? rowsVisibleIf;
   bool? showHeader;
   String? allowRowsDragAndDrop;
+
+  MatrixBase({required String type, required String name})
+      : super(type: type, name: name);
 }

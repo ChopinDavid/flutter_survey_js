@@ -4,7 +4,7 @@ part of 'survey.dart';
 class Expression extends Question {
   static const $type = "expression";
   @override
-  String? get type => $type;
+  String get type => $type;
   String? expression;
   String? format;
   //"none",  "decimal","currency","percent","date"
@@ -26,7 +26,7 @@ class Expression extends Question {
   @override
   String? requiredIf;
 
-  Expression();
+  Expression({required String name}) : super(type: $type, name: name);
 
   factory Expression.fromJson(Map<String, dynamic> json) =>
       _$ExpressionFromJson(json);

@@ -22,9 +22,15 @@ abstract class SelectBase<T extends ItemValue> extends Question {
   String? otherErrorText;
   // "default","true","false"
   String? storeOthersAsComment;
+
+  SelectBase({required String type, required String name})
+      : super(type: type, name: name);
 }
 
 abstract class CheckBoxBase<T extends ItemValue> extends SelectBase<T> {
   // 0,1,2,3,4,5
   int? colCount;
+
+  CheckBoxBase({required String type, required String name})
+      : super(type: type, name: name);
 }

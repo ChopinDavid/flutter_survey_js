@@ -41,9 +41,7 @@ void main() {
                   pages: [
                     TestData.page(
                       elements: [
-                        Rating()
-                          ..defaultValue = defaultValue
-                          ..name = elementName,
+                        Rating(name: elementName)..defaultValue = defaultValue
                       ],
                     ),
                   ],
@@ -75,7 +73,7 @@ void main() {
                   pages: [
                     TestData.page(
                       elements: [
-                        Rating()..name = elementName,
+                        Rating(name: elementName),
                       ],
                     ),
                   ],

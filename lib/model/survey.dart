@@ -105,7 +105,7 @@ class Survey {
   }
   static surveyFromPage(Page page) {
     return Survey()
-      ..pages = [Page()..elements = page.elements]
+      ..pages = [Page(name: page.name)..elements = page.elements]
       ..description = page.description
       ..maxTimeToFinish = page.maxTimeToFinish
       ..questionsOrder = page.questionsOrder
@@ -134,11 +134,11 @@ class ChoicesRestful {
 class CheckBox extends CheckBoxBase {
   static const $type = "checkbox";
   @override
-  String? get type => $type;
+  String get type => $type;
   bool? hasSelectAll;
   int? maxSelectedChoices;
   String? selectAllText;
-  CheckBox();
+  CheckBox({required String name}) : super(type: $type, name: name);
   factory CheckBox.fromJson(Map<String, dynamic> json) =>
       _$CheckBoxFromJson(json);
   @override
@@ -149,7 +149,7 @@ class CheckBox extends CheckBoxBase {
 class Ranking extends CheckBox {
   static const $type = "ranking";
   @override
-  String? get type => $type;
+  String get type => $type;
   // String? hasOther;
   @override
   String? otherText;
@@ -166,7 +166,7 @@ class Ranking extends CheckBox {
   @override
   int? colCount;
   // String? maxSelectedChoices;
-  Ranking();
+  Ranking({required String name}) : super(name: name);
   factory Ranking.fromJson(Map<String, dynamic> json) =>
       _$RankingFromJson(json);
   @override
@@ -177,9 +177,9 @@ class Ranking extends CheckBox {
 class RadioGroup extends CheckBoxBase {
   static const $type = "radiogroup";
   @override
-  String? get type => $type;
+  String get type => $type;
   bool? showClearButton;
-  RadioGroup();
+  RadioGroup({required String name}) : super(type: $type, name: name);
   factory RadioGroup.fromJson(Map<String, dynamic> json) =>
       _$RadioGroupFromJson(json);
   @override
@@ -190,7 +190,7 @@ class RadioGroup extends CheckBoxBase {
 class ImagePicker extends CheckBoxBase<ImageItemValue> {
   static const $type = "imagepicker";
   @override
-  String? get type => $type;
+  String get type => $type;
   // String? hasOther;
   @override
   String? otherText;
@@ -215,7 +215,7 @@ class ImagePicker extends CheckBoxBase<ImageItemValue> {
   @override
   @JsonKey(fromJson: ImageItemValue.fromListJson)
   List<ImageItemValue>? choices;
-  ImagePicker();
+  ImagePicker({required String name}) : super(type: $type, name: name);
   factory ImagePicker.fromJson(Map<String, dynamic> json) =>
       _$ImagePickerFromJson(json);
   @override
@@ -226,7 +226,7 @@ class ImagePicker extends CheckBoxBase<ImageItemValue> {
 class Dropdown extends SelectBase {
   static const $type = "dropdown";
   @override
-  String? get type => $type;
+  String get type => $type;
   String? optionsCaption;
   bool? showOptionsCaption;
   num? choicesMin;
@@ -239,7 +239,7 @@ class Dropdown extends SelectBase {
   bool? showOtherItem;
   bool? showNoneItem;
 
-  Dropdown();
+  Dropdown({required String name}) : super(type: $type, name: name);
   factory Dropdown.fromJson(Map<String, dynamic> json) =>
       _$DropdownFromJson(json);
   @override
@@ -250,7 +250,7 @@ class Dropdown extends SelectBase {
 class Text extends Question {
   static const $type = "text";
   @override
-  String? get type => $type;
+  String get type => $type;
   //   "color",
   // "date",
   // "datetime",
@@ -282,7 +282,7 @@ class Text extends Question {
   int? maxLength;
   String? placeholder;
   List<String>? dataList;
-  Text();
+  Text({required String name}) : super(type: $type, name: name);
   factory Text.fromJson(Map<String, dynamic> json) => _$TextFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$TextToJson(this);
@@ -292,11 +292,12 @@ class Text extends Question {
 class MultipleText extends Question {
   static const $type = "multipletext";
   @override
-  String? get type => $type;
+  String get type => $type;
   List<MultipleTextItem>? items;
   int? itemSize;
   int? colCount;
-  MultipleText();
+
+  MultipleText({required String name}) : super(type: $type, name: name);
   factory MultipleText.fromJson(Map<String, dynamic> json) =>
       _$MultipleTextFromJson(json);
   @override
@@ -305,7 +306,7 @@ class MultipleText extends Question {
 
 @JsonSerializable(includeIfNull: false)
 class MultipleTextItem {
-  String? name;
+  String name;
   bool? isRequired;
   //   "color",
   // "date",
@@ -328,7 +329,7 @@ class MultipleTextItem {
   String? requiredErrorText;
   List<SurveyValidator>? validators;
   String? placeholder;
-  MultipleTextItem();
+  MultipleTextItem({required this.name}) : super();
   factory MultipleTextItem.fromJson(Map<String, dynamic> json) =>
       _$MultipleTextItemFromJson(json);
   Map<String, dynamic> toJson() => _$MultipleTextItemToJson(this);
@@ -338,7 +339,7 @@ class MultipleTextItem {
 class NonValue extends Question {
   static const $type = "nonvalue";
   @override
-  String? get type => $type;
+  String get type => $type;
   @override
   String? title;
   @override
@@ -360,7 +361,7 @@ class NonValue extends Question {
   @override
   String? titleLocation;
   // String? useDisplayValuesInTitle;
-  NonValue();
+  NonValue({required String name}) : super(type: $type, name: name);
   factory NonValue.fromJson(Map<String, dynamic> json) =>
       _$NonValueFromJson(json);
   @override
@@ -371,9 +372,9 @@ class NonValue extends Question {
 class Html extends NonValue {
   static const $type = "html";
   @override
-  String? get type => $type;
+  String get type => $type;
   String? html;
-  Html();
+  Html({required String name}) : super(name: name);
   factory Html.fromJson(Map<String, dynamic> json) => _$HtmlFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$HtmlToJson(this);
@@ -383,7 +384,7 @@ class Html extends NonValue {
 class Image extends NonValue {
   static const $type = "image";
   @override
-  String? get type => $type;
+  String get type => $type;
   String? imageLink;
   String? text;
   //"image" "video"
@@ -392,7 +393,7 @@ class Image extends NonValue {
   String? imageFit;
   int? imageHeight;
   int? imageWidth;
-  Image();
+  Image({required String name}) : super(name: name);
   factory Image.fromJson(Map<String, dynamic> json) => _$ImageFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$ImageToJson(this);
@@ -402,8 +403,8 @@ class Image extends NonValue {
 class Empty extends Question {
   static const $type = "empty";
   @override
-  String? get type => $type;
-  Empty();
+  String get type => $type;
+  Empty({required String name}) : super(type: $type, name: name);
   factory Empty.fromJson(Map<String, dynamic> json) => _$EmptyFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$EmptyToJson(this);
@@ -413,7 +414,7 @@ class Empty extends Question {
 class Comment extends Question {
   static const $type = "comment";
   @override
-  String? get type => $type;
+  String get type => $type;
   int? maxLength;
   int? cols;
   int? rows;
@@ -422,7 +423,7 @@ class Comment extends Question {
   // "onBlur",
   // "onTyping"
   String? textUpdateMode;
-  Comment();
+  Comment({required String name}) : super(type: $type, name: name);
   factory Comment.fromJson(Map<String, dynamic> json) =>
       _$CommentFromJson(json);
   @override
@@ -433,7 +434,7 @@ class Comment extends Question {
 class File extends Question {
   static const $type = "file";
   @override
-  String? get type => $type;
+  String get type => $type;
   String? hasComment;
   String? commentText;
   bool? showPreview;
@@ -449,7 +450,7 @@ class File extends Question {
   String? correctAnswer;
   // String? validators;
   bool? needConfirmRemoveFile;
-  File();
+  File({required String name}) : super(type: $type, name: name);
   factory File.fromJson(Map<String, dynamic> json) => _$FileFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$FileToJson(this);
@@ -459,7 +460,7 @@ class File extends Question {
 class Rating extends Question {
   static const $type = "rating";
   @override
-  String? get type => $type;
+  String get type => $type;
   String? hasComment;
   String? commentText;
   List<ItemValue>? rateValues;
@@ -468,7 +469,7 @@ class Rating extends Question {
   int? rateStep;
   String? minRateDescription;
   String? maxRateDescription;
-  Rating();
+  Rating({required String name}) : super(type: $type, name: name);
   factory Rating.fromJson(Map<String, dynamic> json) => _$RatingFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$RatingToJson(this);
@@ -478,7 +479,7 @@ class Rating extends Question {
 class Boolean extends Question {
   static const $type = "boolean";
   @override
-  String? get type => $type;
+  String get type => $type;
   String? label;
   String? labelTrue;
   String? labelFalse;
@@ -487,7 +488,7 @@ class Boolean extends Question {
   String? valueFalse;
   @override
   String? renderAs;
-  Boolean();
+  Boolean({required String name}) : super(type: $type, name: name);
   factory Boolean.fromJson(Map<String, dynamic> json) =>
       _$BooleanFromJson(json);
   @override
@@ -498,7 +499,7 @@ class Boolean extends Question {
 class SignaturePad extends Question {
   static const $type = "signaturepad";
   @override
-  String? get type => $type;
+  String get type => $type;
   // int? width;
   int? height;
   bool? allowClear;
@@ -519,7 +520,7 @@ class SignaturePad extends Question {
   String? dataFormat;
   @override
   String? correctAnswer;
-  SignaturePad();
+  SignaturePad({required String name}) : super(type: $type, name: name);
   factory SignaturePad.fromJson(Map<String, dynamic> json) =>
       _$SignaturePadFromJson(json);
   @override
@@ -541,11 +542,11 @@ class CalculatedValue {
 class ButtonGroup extends CheckBoxBase<ButtonGroupItemValue> {
   static const $type = "buttongroup";
   @override
-  String? get type => $type;
+  String get type => $type;
   @override
   @JsonKey(fromJson: ButtonGroupItemValue.fromListJson)
   List<ButtonGroupItemValue>? choices;
-  ButtonGroup();
+  ButtonGroup({required String name}) : super(type: $type, name: name);
   factory ButtonGroup.fromJson(Map<String, dynamic> json) =>
       _$ButtonGroupFromJson(json);
   @override

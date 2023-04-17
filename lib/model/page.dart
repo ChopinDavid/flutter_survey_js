@@ -3,9 +3,8 @@ part of 'survey.dart';
 @JsonSerializable(includeIfNull: false)
 class Page extends PanelBase {
   static const $type = "page";
-
   @override
-  String? get type => $type;
+  String get type => $type;
   //   "inherit",
   // "show",
   // "hide"
@@ -17,7 +16,7 @@ class Page extends PanelBase {
   int? maxTimeToFinish;
   String? navigationTitle;
   String? navigationDescription;
-  Page();
+  Page({required String name}) : super(name: name);
   factory Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$PageToJson(this);
@@ -25,7 +24,7 @@ class Page extends PanelBase {
 
 abstract class PanelBase extends ElementBase {
   @override
-  String? name;
+  final String name;
   List<ElementBase>? elements;
   bool? visible;
   String? visibleIf;
@@ -37,4 +36,6 @@ abstract class PanelBase extends ElementBase {
   //
   String? title;
   String? description;
+
+  PanelBase({required this.name});
 }
