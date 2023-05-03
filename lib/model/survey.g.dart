@@ -195,6 +195,7 @@ CheckBox _$CheckBoxFromJson(Map<String, dynamic> json) => CheckBox()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..hasComment = json['hasComment'] as String?
   ..commentText = json['commentText'] as String?
   ..choicesFromQuestion = json['choicesFromQuestion'] as String?
@@ -257,6 +258,7 @@ Map<String, dynamic> _$CheckBoxToJson(CheckBox instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('hasComment', instance.hasComment);
   writeNotNull('commentText', instance.commentText);
   writeNotNull('choicesFromQuestion', instance.choicesFromQuestion);
@@ -313,6 +315,7 @@ Ranking _$RankingFromJson(Map<String, dynamic> json) => Ranking()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..hasComment = json['hasComment'] as String?
   ..commentText = json['commentText'] as String?
   ..choicesFromQuestion = json['choicesFromQuestion'] as String?
@@ -375,6 +378,7 @@ Map<String, dynamic> _$RankingToJson(Ranking instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('hasComment', instance.hasComment);
   writeNotNull('commentText', instance.commentText);
   writeNotNull('choicesFromQuestion', instance.choicesFromQuestion);
@@ -431,6 +435,7 @@ RadioGroup _$RadioGroupFromJson(Map<String, dynamic> json) => RadioGroup()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..hasComment = json['hasComment'] as String?
   ..commentText = json['commentText'] as String?
   ..choicesFromQuestion = json['choicesFromQuestion'] as String?
@@ -491,6 +496,7 @@ Map<String, dynamic> _$RadioGroupToJson(RadioGroup instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('hasComment', instance.hasComment);
   writeNotNull('commentText', instance.commentText);
   writeNotNull('choicesFromQuestion', instance.choicesFromQuestion);
@@ -545,6 +551,7 @@ ImagePicker _$ImagePickerFromJson(Map<String, dynamic> json) => ImagePicker()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..hasComment = json['hasComment'] as String?
   ..commentText = json['commentText'] as String?
   ..choicesFromQuestion = json['choicesFromQuestion'] as String?
@@ -611,6 +618,7 @@ Map<String, dynamic> _$ImagePickerToJson(ImagePicker instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('hasComment', instance.hasComment);
   writeNotNull('commentText', instance.commentText);
   writeNotNull('choicesFromQuestion', instance.choicesFromQuestion);
@@ -671,6 +679,7 @@ Dropdown _$DropdownFromJson(Map<String, dynamic> json) => Dropdown()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..hasComment = json['hasComment'] as String?
   ..commentText = json['commentText'] as String?
   ..choicesFromQuestion = json['choicesFromQuestion'] as String?
@@ -738,6 +747,7 @@ Map<String, dynamic> _$DropdownToJson(Dropdown instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('hasComment', instance.hasComment);
   writeNotNull('commentText', instance.commentText);
   writeNotNull('choicesFromQuestion', instance.choicesFromQuestion);
@@ -799,6 +809,7 @@ Text _$TextFromJson(Map<String, dynamic> json) => Text()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..type = json['type'] as String?
   ..inputType = json['inputType'] as String?
   ..size = json['size'] as int?
@@ -853,6 +864,7 @@ Map<String, dynamic> _$TextToJson(Text instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('type', instance.type);
   writeNotNull('inputType', instance.inputType);
   writeNotNull('size', instance.size);
@@ -902,6 +914,7 @@ MultipleText _$MultipleTextFromJson(Map<String, dynamic> json) => MultipleText()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..type = json['type'] as String?
   ..items = (json['items'] as List<dynamic>?)
       ?.map((e) => MultipleTextItem.fromJson(e as Map<String, dynamic>))
@@ -946,6 +959,7 @@ Map<String, dynamic> _$MultipleTextToJson(MultipleText instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('type', instance.type);
   writeNotNull('items', instance.items);
   writeNotNull('itemSize', instance.itemSize);
@@ -1010,6 +1024,7 @@ NonValue _$NonValueFromJson(Map<String, dynamic> json) => NonValue()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..type = json['type'] as String?
   ..title = json['title'] as String?
   ..description = json['description'] as String?
@@ -1049,6 +1064,7 @@ Map<String, dynamic> _$NonValueToJson(NonValue instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('type', instance.type);
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
@@ -1084,6 +1100,7 @@ Html _$HtmlFromJson(Map<String, dynamic> json) => Html()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..title = json['title'] as String?
   ..description = json['description'] as String?
   ..valueName = json['valueName'] as String?
@@ -1124,6 +1141,7 @@ Map<String, dynamic> _$HtmlToJson(Html instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   writeNotNull('valueName', instance.valueName);
@@ -1160,6 +1178,7 @@ Image _$ImageFromJson(Map<String, dynamic> json) => Image()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..title = json['title'] as String?
   ..description = json['description'] as String?
   ..valueName = json['valueName'] as String?
@@ -1205,6 +1224,7 @@ Map<String, dynamic> _$ImageToJson(Image instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   writeNotNull('valueName', instance.valueName);
@@ -1255,6 +1275,7 @@ Empty _$EmptyFromJson(Map<String, dynamic> json) => Empty()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..type = json['type'] as String?;
 
 Map<String, dynamic> _$EmptyToJson(Empty instance) {
@@ -1294,6 +1315,7 @@ Map<String, dynamic> _$EmptyToJson(Empty instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('type', instance.type);
   return val;
 }
@@ -1329,6 +1351,7 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..type = json['type'] as String?
   ..maxLength = json['maxLength'] as int?
   ..cols = json['cols'] as int?
@@ -1373,6 +1396,7 @@ Map<String, dynamic> _$CommentToJson(Comment instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('type', instance.type);
   writeNotNull('maxLength', instance.maxLength);
   writeNotNull('cols', instance.cols);
@@ -1412,6 +1436,7 @@ File _$FileFromJson(Map<String, dynamic> json) => File()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..type = json['type'] as String?
   ..hasComment = json['hasComment'] as String?
   ..commentText = json['commentText'] as String?
@@ -1463,6 +1488,7 @@ Map<String, dynamic> _$FileToJson(File instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('type', instance.type);
   writeNotNull('hasComment', instance.hasComment);
   writeNotNull('commentText', instance.commentText);
@@ -1511,6 +1537,7 @@ Rating _$RatingFromJson(Map<String, dynamic> json) => Rating()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..type = json['type'] as String?
   ..hasComment = json['hasComment'] as String?
   ..commentText = json['commentText'] as String?
@@ -1560,6 +1587,7 @@ Map<String, dynamic> _$RatingToJson(Rating instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('type', instance.type);
   writeNotNull('hasComment', instance.hasComment);
   writeNotNull('commentText', instance.commentText);
@@ -1602,6 +1630,7 @@ Boolean _$BooleanFromJson(Map<String, dynamic> json) => Boolean()
       ?.map((e) => SurveyValidator.fromJson(e as Map<String, dynamic>))
       .toList()
   ..bindings = json['bindings'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..type = json['type'] as String?
   ..label = json['label'] as String?
   ..labelTrue = json['labelTrue'] as String?
@@ -1647,6 +1676,7 @@ Map<String, dynamic> _$BooleanToJson(Boolean instance) {
   writeNotNull('readOnly', instance.readOnly);
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('type', instance.type);
   writeNotNull('label', instance.label);
   writeNotNull('labelTrue', instance.labelTrue);
@@ -1688,6 +1718,7 @@ SignaturePad _$SignaturePadFromJson(Map<String, dynamic> json) => SignaturePad()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..type = json['type'] as String?
   ..height = json['height'] as int?
   ..allowClear = json['allowClear'] as bool?
@@ -1732,6 +1763,7 @@ Map<String, dynamic> _$SignaturePadToJson(SignaturePad instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('type', instance.type);
   writeNotNull('height', instance.height);
   writeNotNull('allowClear', instance.allowClear);
@@ -1794,6 +1826,7 @@ ButtonGroup _$ButtonGroupFromJson(Map<String, dynamic> json) => ButtonGroup()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..hasComment = json['hasComment'] as String?
   ..commentText = json['commentText'] as String?
   ..choicesFromQuestion = json['choicesFromQuestion'] as String?
@@ -1853,6 +1886,7 @@ Map<String, dynamic> _$ButtonGroupToJson(ButtonGroup instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('hasComment', instance.hasComment);
   writeNotNull('commentText', instance.commentText);
   writeNotNull('choicesFromQuestion', instance.choicesFromQuestion);
@@ -1979,6 +2013,7 @@ Expression _$ExpressionFromJson(Map<String, dynamic> json) => Expression()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..type = json['type'] as String?
   ..expression = json['expression'] as String?
   ..format = json['format'] as String?
@@ -2025,6 +2060,7 @@ Map<String, dynamic> _$ExpressionToJson(Expression instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('type', instance.type);
   writeNotNull('expression', instance.expression);
   writeNotNull('format', instance.format);
@@ -2127,6 +2163,7 @@ MatrixDropdown _$MatrixDropdownFromJson(Map<String, dynamic> json) =>
           .toList()
       ..bindings = json['bindings'] as String?
       ..renderAs = json['renderAs'] as String?
+      ..isPanel = json['isPanel'] as bool?
       ..columnsVisibleIf = json['columnsVisibleIf'] as String?
       ..showHeader = json['showHeader'] as bool?
       ..allowRowsDragAndDrop = json['allowRowsDragAndDrop'] as String?
@@ -2186,6 +2223,7 @@ Map<String, dynamic> _$MatrixDropdownToJson(MatrixDropdown instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('columnsVisibleIf', instance.columnsVisibleIf);
   writeNotNull('showHeader', instance.showHeader);
   writeNotNull('allowRowsDragAndDrop', instance.allowRowsDragAndDrop);
@@ -2240,6 +2278,7 @@ MatrixDynamic _$MatrixDynamicFromJson(Map<String, dynamic> json) =>
           .toList()
       ..bindings = json['bindings'] as String?
       ..renderAs = json['renderAs'] as String?
+      ..isPanel = json['isPanel'] as bool?
       ..columnsVisibleIf = json['columnsVisibleIf'] as String?
       ..showHeader = json['showHeader'] as bool?
       ..allowRowsDragAndDrop = json['allowRowsDragAndDrop'] as String?
@@ -2311,6 +2350,7 @@ Map<String, dynamic> _$MatrixDynamicToJson(MatrixDynamic instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('columnsVisibleIf', instance.columnsVisibleIf);
   writeNotNull('showHeader', instance.showHeader);
   writeNotNull('allowRowsDragAndDrop', instance.allowRowsDragAndDrop);
@@ -2376,6 +2416,7 @@ Matrix _$MatrixFromJson(Map<String, dynamic> json) => Matrix()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..columnsVisibleIf = json['columnsVisibleIf'] as String?
   ..rowsVisibleIf = json['rowsVisibleIf'] as String?
   ..showHeader = json['showHeader'] as bool?
@@ -2427,6 +2468,7 @@ Map<String, dynamic> _$MatrixToJson(Matrix instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('columnsVisibleIf', instance.columnsVisibleIf);
   writeNotNull('rowsVisibleIf', instance.rowsVisibleIf);
   writeNotNull('showHeader', instance.showHeader);
@@ -2509,18 +2551,42 @@ Map<String, dynamic> _$MatrixDropdownColumnToJson(
 }
 
 Page _$PageFromJson(Map<String, dynamic> json) => Page()
+  ..state = json['state'] as String?
   ..name = json['name'] as String?
-  ..elements = (json['elements'] as List<dynamic>?)
-      ?.map((e) => ElementBase.fromJson(e as Map<String, dynamic>))
-      .toList()
   ..visible = json['visible'] as bool?
+  ..useDisplayValuesInTitle = json['useDisplayValuesInTitle'] as bool?
   ..visibleIf = json['visibleIf'] as String?
-  ..enableIf = json['enableIf'] as String?
-  ..requiredIf = json['requiredIf'] as String?
-  ..readOnly = json['readOnly'] as bool?
-  ..questionTitleLocation = json['questionTitleLocation'] as String?
+  ..width = json['width'] as String?
+  ..minWidth = json['minWidth'] as String?
+  ..maxWidth = json['maxWidth'] as String?
+  ..startWithNewLine = json['startWithNewLine'] as bool?
+  ..indent = json['indent'] as int?
+  ..page = json['page'] as String?
   ..title = json['title'] as String?
+  ..titleLocation = json['titleLocation'] as String?
   ..description = json['description'] as String?
+  ..descriptionLocation = json['descriptionLocation'] as String?
+  ..hideNumber = json['hideNumber'] as bool?
+  ..valueName = json['valueName'] as String?
+  ..enableIf = json['enableIf'] as String?
+  ..defaultValue = json['defaultValue']
+  ..defaultValueExpression = json['defaultValueExpression'] as String?
+  ..correctAnswer = json['correctAnswer'] as String?
+  ..isRequired = json['isRequired'] as bool?
+  ..requiredIf = json['requiredIf'] as String?
+  ..requiredErrorText = json['requiredErrorText'] as String?
+  ..readOnly = json['readOnly'] as bool?
+  ..validators = (json['validators'] as List<dynamic>?)
+      ?.map((e) => SurveyValidator.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..bindings = json['bindings'] as String?
+  ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
+  ..elements = (json['elements'] as List<dynamic>?)
+      ?.map((e) => Question.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..questionTitleLocation = json['questionTitleLocation'] as String?
+  ..type = json['type'] as String?
   ..navigationButtonsVisibility = json['navigationButtonsVisibility'] as String?
   ..questionsOrder = json['questionsOrder'] as String?
   ..maxTimeToFinish = json['maxTimeToFinish'] as int?
@@ -2536,16 +2602,38 @@ Map<String, dynamic> _$PageToJson(Page instance) {
     }
   }
 
+  writeNotNull('state', instance.state);
   writeNotNull('name', instance.name);
-  writeNotNull('elements', instance.elements);
   writeNotNull('visible', instance.visible);
+  writeNotNull('useDisplayValuesInTitle', instance.useDisplayValuesInTitle);
   writeNotNull('visibleIf', instance.visibleIf);
-  writeNotNull('enableIf', instance.enableIf);
-  writeNotNull('requiredIf', instance.requiredIf);
-  writeNotNull('readOnly', instance.readOnly);
-  writeNotNull('questionTitleLocation', instance.questionTitleLocation);
+  writeNotNull('width', instance.width);
+  writeNotNull('minWidth', instance.minWidth);
+  writeNotNull('maxWidth', instance.maxWidth);
+  writeNotNull('startWithNewLine', instance.startWithNewLine);
+  writeNotNull('indent', instance.indent);
+  writeNotNull('page', instance.page);
   writeNotNull('title', instance.title);
+  writeNotNull('titleLocation', instance.titleLocation);
   writeNotNull('description', instance.description);
+  writeNotNull('descriptionLocation', instance.descriptionLocation);
+  writeNotNull('hideNumber', instance.hideNumber);
+  writeNotNull('valueName', instance.valueName);
+  writeNotNull('enableIf', instance.enableIf);
+  writeNotNull('defaultValue', instance.defaultValue);
+  writeNotNull('defaultValueExpression', instance.defaultValueExpression);
+  writeNotNull('correctAnswer', instance.correctAnswer);
+  writeNotNull('isRequired', instance.isRequired);
+  writeNotNull('requiredIf', instance.requiredIf);
+  writeNotNull('requiredErrorText', instance.requiredErrorText);
+  writeNotNull('readOnly', instance.readOnly);
+  writeNotNull('validators', instance.validators);
+  writeNotNull('bindings', instance.bindings);
+  writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
+  writeNotNull('elements', instance.elements);
+  writeNotNull('questionTitleLocation', instance.questionTitleLocation);
+  writeNotNull('type', instance.type);
   writeNotNull(
       'navigationButtonsVisibility', instance.navigationButtonsVisibility);
   writeNotNull('questionsOrder', instance.questionsOrder);
@@ -2557,17 +2645,34 @@ Map<String, dynamic> _$PageToJson(Page instance) {
 
 Panel _$PanelFromJson(Map<String, dynamic> json) => Panel()
   ..name = json['name'] as String?
-  ..elements = (json['elements'] as List<dynamic>?)
-      ?.map((e) => ElementBase.fromJson(e as Map<String, dynamic>))
-      .toList()
   ..visible = json['visible'] as bool?
+  ..useDisplayValuesInTitle = json['useDisplayValuesInTitle'] as bool?
   ..visibleIf = json['visibleIf'] as String?
+  ..minWidth = json['minWidth'] as String?
+  ..maxWidth = json['maxWidth'] as String?
+  ..title = json['title'] as String?
+  ..titleLocation = json['titleLocation'] as String?
+  ..description = json['description'] as String?
+  ..descriptionLocation = json['descriptionLocation'] as String?
+  ..hideNumber = json['hideNumber'] as bool?
+  ..valueName = json['valueName'] as String?
   ..enableIf = json['enableIf'] as String?
+  ..defaultValue = json['defaultValue']
+  ..defaultValueExpression = json['defaultValueExpression'] as String?
+  ..correctAnswer = json['correctAnswer'] as String?
   ..requiredIf = json['requiredIf'] as String?
   ..readOnly = json['readOnly'] as bool?
+  ..validators = (json['validators'] as List<dynamic>?)
+      ?.map((e) => SurveyValidator.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..bindings = json['bindings'] as String?
+  ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
+  ..elements = (json['elements'] as List<dynamic>?)
+      ?.map((e) => Question.fromJson(e as Map<String, dynamic>))
+      .toList()
   ..questionTitleLocation = json['questionTitleLocation'] as String?
-  ..title = json['title'] as String?
-  ..description = json['description'] as String?
+  ..type = json['type'] as String?
   ..state = json['state'] as String?
   ..isRequired = json['isRequired'] as bool?
   ..requiredErrorText = json['requiredErrorText'] as String?
@@ -2590,15 +2695,30 @@ Map<String, dynamic> _$PanelToJson(Panel instance) {
   }
 
   writeNotNull('name', instance.name);
-  writeNotNull('elements', instance.elements);
   writeNotNull('visible', instance.visible);
+  writeNotNull('useDisplayValuesInTitle', instance.useDisplayValuesInTitle);
   writeNotNull('visibleIf', instance.visibleIf);
+  writeNotNull('minWidth', instance.minWidth);
+  writeNotNull('maxWidth', instance.maxWidth);
+  writeNotNull('title', instance.title);
+  writeNotNull('titleLocation', instance.titleLocation);
+  writeNotNull('description', instance.description);
+  writeNotNull('descriptionLocation', instance.descriptionLocation);
+  writeNotNull('hideNumber', instance.hideNumber);
+  writeNotNull('valueName', instance.valueName);
   writeNotNull('enableIf', instance.enableIf);
+  writeNotNull('defaultValue', instance.defaultValue);
+  writeNotNull('defaultValueExpression', instance.defaultValueExpression);
+  writeNotNull('correctAnswer', instance.correctAnswer);
   writeNotNull('requiredIf', instance.requiredIf);
   writeNotNull('readOnly', instance.readOnly);
+  writeNotNull('validators', instance.validators);
+  writeNotNull('bindings', instance.bindings);
+  writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
+  writeNotNull('elements', instance.elements);
   writeNotNull('questionTitleLocation', instance.questionTitleLocation);
-  writeNotNull('title', instance.title);
-  writeNotNull('description', instance.description);
+  writeNotNull('type', instance.type);
   writeNotNull('state', instance.state);
   writeNotNull('isRequired', instance.isRequired);
   writeNotNull('requiredErrorText', instance.requiredErrorText);
@@ -2644,9 +2764,10 @@ PanelDynamic _$PanelDynamicFromJson(Map<String, dynamic> json) => PanelDynamic()
       .toList()
   ..bindings = json['bindings'] as String?
   ..renderAs = json['renderAs'] as String?
+  ..isPanel = json['isPanel'] as bool?
   ..type = json['type'] as String?
-  ..templateElements = (json['templateElements'] as List<dynamic>?)
-      ?.map((e) => ElementBase.fromJson(e as Map<String, dynamic>))
+  ..elements = (json['elements'] as List<dynamic>?)
+      ?.map((e) => Question.fromJson(e as Map<String, dynamic>))
       .toList()
   ..templateTitle = json['templateTitle'] as String?
   ..templateDescription = json['templateDescription'] as String?
@@ -2709,8 +2830,9 @@ Map<String, dynamic> _$PanelDynamicToJson(PanelDynamic instance) {
   writeNotNull('validators', instance.validators);
   writeNotNull('bindings', instance.bindings);
   writeNotNull('renderAs', instance.renderAs);
+  writeNotNull('isPanel', instance.isPanel);
   writeNotNull('type', instance.type);
-  writeNotNull('templateElements', instance.templateElements);
+  writeNotNull('elements', instance.elements);
   writeNotNull('templateTitle', instance.templateTitle);
   writeNotNull('templateDescription', instance.templateDescription);
   writeNotNull('allowAddPanel', instance.allowAddPanel);

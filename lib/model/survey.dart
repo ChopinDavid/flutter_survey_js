@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -98,7 +99,148 @@ class Survey extends Equatable {
   //     "all",       "page",     "survey"
   String? showTimerPanelMode;
   Survey();
+
+  bool get isDisplayMode {
+    return mode == "display" /*|| this.state == "preview"*/;
+  }
+
+  Page? getPageByName(String name) {
+    final List<Page> pages = this.pages ?? [];
+    if (pages.isEmpty) {
+      return null;
+    }
+    for (int i = 0; i < pages.length; i++) {
+      if (pages[i].name == name) return pages[i];
+    }
+    return null;
+  }
+
+  List<Panel> getAllPanels({
+    bool visibleOnly = false,
+    bool includingDesignTime = false,
+  }) {
+    var result = <Panel>[];
+    final pages = this.pages ?? [];
+    for (int i = 0; i < pages.length; i++) {
+      pages[i].addPanelsIntoList(result,
+          visibleOnly: visibleOnly, includingDesignTime: includingDesignTime);
+    }
+    return result;
+  }
+
+  Panel? getPanelByName(
+    String name, {
+    bool caseInsensitive = false,
+  }) {
+    final List<Panel> panels = this.getAllPanels() ?? [];
+
+    if (caseInsensitive) name = name.toLowerCase();
+    for (int i = 0; i < panels.length; i++) {
+      var panelName = panels[i].name;
+      if (caseInsensitive) panelName = panelName?.toLowerCase();
+      if (panelName == name) return panels[i];
+    }
+    return null;
+  }
+
+  // static Map<String, dynamic> _questionHashes = {
+  //   'names': {},
+  //   'namesInsensitive': {},
+  //   'valueNames': {},
+  //   'valueNamesInsensitive': {},
+  // };
+  //
+  // static _questionHashesClear() {
+  //   _questionHashes['names'] = {};
+  //   _questionHashes['namesInsensitive'] = {};
+  //   _questionHashes['valueNames'] = {};
+  //   _questionHashes['valueNamesInsensitive'] = {};
+  // }
+  //
+  // _questionHashesPanelAdded(PanelBase panel) {
+  //   // if (this.isLoadingFromJson) return;
+  //   var questions = panel.elements;
+  //   if (questions == null) {
+  //     return;
+  //   }
+  //   for (var i = 0; i < questions.length; i++) {
+  //     this._questionHashesAdded(questions[i]);
+  //   }
+  // }
+  //
+  // _questionHashesAdded(Question question) {
+  //   _questionHashAddedCore(_questionHashes['names'], question, question.name);
+  //   _questionHashAddedCore(_questionHashes['namesInsensitive'], question,
+  //       question.name?.toLowerCase());
+  //   _questionHashAddedCore(
+  //       _questionHashes['valueNames'], question, question.getValueName());
+  //   _questionHashAddedCore(_questionHashes['valueNamesInsensitive'], question,
+  //       question.getValueName()?.toLowerCase());
+  // }
+  //
+  // _questionHashesRemoved(
+  //   Question question,
+  //   String? name,
+  //   String? valueName,
+  // ) {
+  //   if (name != null) {
+  //     _questionHashRemovedCore(_questionHashes['names'], question, name);
+  //     _questionHashRemovedCore(
+  //         _questionHashes['namesInsensitive'], question, name.toLowerCase());
+  //   }
+  //   if (valueName != null) {
+  //     _questionHashRemovedCore(
+  //         _questionHashes['valueNames'], question, valueName);
+  //     _questionHashRemovedCore(_questionHashes['valueNamesInsensitive'],
+  //         question, valueName.toLowerCase());
+  //   }
+  // }
+  //
+  // _questionHashAddedCore(Map hash, Question question, String? name) {
+  //   var res = hash[name];
+  //   if (!!res) {
+  //     var res = hash[name];
+  //     if (res.indexOf(question) < 0) {
+  //       res.push(question);
+  //     }
+  //   } else {
+  //     hash[name] = [question];
+  //   }
+  // }
+  //
+  // _questionHashRemovedCore(Map hash, Question question, String name) {
+  //   var res = hash[name];
+  //   if (!res) return;
+  //   var index = res.indexOf(question);
+  //   if (index > -1) {
+  //     res.splice(index, 1);
+  //   }
+  //   if (res.length == 0) {
+  //     hash.remove(name);
+  //   }
+  // }
+
+  List<Question> get questions => pages!.fold<List<Question>>(
+      <Question>[],
+      (previousValue, element) =>
+          previousValue..addAll(element.elements ?? <Question>[]));
+
+  Question? getQuestionByName(String name, {bool caseInsensitive = false}) {
+    if (name == '') return null;
+    if (caseInsensitive) {
+      name = name.toLowerCase();
+    }
+    final questions = this.questions;
+    var res = caseInsensitive
+        ? questions.firstWhereOrNull(
+            (element) => element.name?.toLowerCase() == name.toLowerCase())
+        : questions.firstWhere((element) => element.name == name);
+    if (res == null) return null;
+    return res;
+  }
+
   factory Survey.fromJson(Map<String, dynamic> json) {
+    // _questionHashesClear();
     final List<Map<String, dynamic>>? elementsOrQuestionsJson =
         (json['elements'] as List?)?.cast<Map<String, dynamic>>() ??
             (json['questions'] as List?)?.cast<Map<String, dynamic>>();

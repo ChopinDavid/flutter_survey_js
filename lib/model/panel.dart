@@ -36,7 +36,7 @@ class PanelDynamic extends Question {
 
   @override
   String? get type => $type;
-  List<ElementBase>? templateElements;
+  List<Question>? elements;
   String? templateTitle;
   String? templateDescription;
   bool? allowAddPanel;
@@ -82,4 +82,9 @@ class PanelDynamic extends Question {
       _$PanelDynamicFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$PanelDynamicToJson(this);
+
+  @override
+  List<Question> getElementsInDesign({bool includeHidden = false}) {
+    return elements ?? [];
+  }
 }

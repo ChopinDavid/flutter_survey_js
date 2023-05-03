@@ -28,8 +28,9 @@ class PanelDynamicElement extends StatelessWidget {
   Widget build(BuildContext context) {
     createNew() {
       //create new formGroup
-      return elementsToFormGroup((element.templateElements ?? []).toList());
+      return elementsToFormGroup((element.elements ?? []).toList());
     }
+
     return ReactiveNestedGroupArray(
         createNew: createNew,
         formArrayName: formControlName,
@@ -42,10 +43,10 @@ class PanelDynamicElement extends StatelessWidget {
                   child: ListView.separated(
                     physics: const ClampingScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: element.templateElements?.length ?? 0,
+                    itemCount: element.elements?.length ?? 0,
                     itemBuilder: (BuildContext context, int index) {
                       final res = SurveyElementFactory()
-                          .resolve(context, element.templateElements![index]);
+                          .resolve(context, element.elements![index]);
                       return res;
                     },
                     separatorBuilder: (BuildContext context, int index) {
