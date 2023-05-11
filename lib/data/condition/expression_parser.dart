@@ -1,7 +1,6 @@
 /* eslint-disable */
 import "expressions.dart"
     show
-        ArrayOperand,
         BinaryOperand,
         Const,
         FunctionOperand,
@@ -258,10 +257,13 @@ peg$parse(String input, [IParseOptions? options]) {
 
   buildBinaryOperand(Operand head, List<dynamic> tail,
       [bool isArithmeticOp = false]) {
-    return tail.reduce((result, elements) {
-      return new BinaryOperand(
-          elements[1], result, elements[3], isArithmeticOp);
-    }, head);
+    return tail.fold(head, (result, elements) {
+      return BinaryOperand(elements[1], result, elements[3], isArithmeticOp);
+    });
+  }
+
+  List<dynamic> flattenList(List<dynamic> list) {
+    return list.expand((i) => i).toList();
   }
 
   final peg$c0 = /* dynamic */ (dynamic head, dynamic tail) {
@@ -411,7 +413,7 @@ peg$parse(String input, [IParseOptions? options]) {
     if (expr == null) return new ListOperand([]);
     var list = <Operand>[expr];
     if (tail is List) {
-      var flatten = flattenArray(tail);
+      var flatten = flattenList(tail);
       for (var i = 3; i < flatten.length; i += 4) {
         list.add(flatten[i]);
       }
@@ -558,7 +560,7 @@ peg$parse(String input, [IParseOptions? options]) {
     }
     peg$silentFails++;
     s0 = [];
-    if (peg$c168.test(input[peg$currPos])) {
+    if (peg$c168.hasMatch(input[peg$currPos])) {
       s1 = input[peg$currPos];
       peg$currPos++;
     } else {
@@ -568,8 +570,8 @@ peg$parse(String input, [IParseOptions? options]) {
       }
     }
     while (!identical(s1, peg$FAILED)) {
-      s0.push(s1);
-      if (peg$c168.test(input[peg$currPos])) {
+      s0.add(s1);
+      if (peg$c168.hasMatch(input[peg$currPos])) {
         s1 = input[peg$currPos];
         peg$currPos++;
       } else {
@@ -602,7 +604,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = [];
-    if (peg$c165.test(input[peg$currPos])) {
+    if (peg$c165.hasMatch(input[peg$currPos])) {
       s1 = input[peg$currPos];
       peg$currPos++;
     } else {
@@ -613,8 +615,8 @@ peg$parse(String input, [IParseOptions? options]) {
     }
     if (!identical(s1, peg$FAILED)) {
       while (!identical(s1, peg$FAILED)) {
-        s0.push(s1);
-        if (peg$c165.test(input[peg$currPos])) {
+        s0.add(s1);
+        if (peg$c165.hasMatch(input[peg$currPos])) {
           s1 = input[peg$currPos];
           peg$currPos++;
         } else {
@@ -640,7 +642,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = [];
-    if (peg$c161.test(input[peg$currPos])) {
+    if (peg$c161.hasMatch(input[peg$currPos])) {
       s1 = input[peg$currPos];
       peg$currPos++;
     } else {
@@ -651,8 +653,8 @@ peg$parse(String input, [IParseOptions? options]) {
     }
     if (!identical(s1, peg$FAILED)) {
       while (!identical(s1, peg$FAILED)) {
-        s0.push(s1);
-        if (peg$c161.test(input[peg$currPos])) {
+        s0.add(s1);
+        if (peg$c161.hasMatch(input[peg$currPos])) {
           s1 = input[peg$currPos];
           peg$currPos++;
         } else {
@@ -687,7 +689,7 @@ peg$parse(String input, [IParseOptions? options]) {
         s5 = [];
         s6 = peg$parseLetters();
         while (!identical(s6, peg$FAILED)) {
-          s5.push(s6);
+          s5.add(s6);
           s6 = peg$parseLetters();
         }
         if (!identical(s5, peg$FAILED)) {
@@ -702,14 +704,14 @@ peg$parse(String input, [IParseOptions? options]) {
         s3 = peg$FAILED;
       }
       while (!identical(s3, peg$FAILED)) {
-        s2.push(s3);
+        s2.add(s3);
         s3 = peg$currPos;
         s4 = peg$parseDigits();
         if (!identical(s4, peg$FAILED)) {
           s5 = [];
           s6 = peg$parseLetters();
           while (!identical(s6, peg$FAILED)) {
-            s5.push(s6);
+            s5.add(s6);
             s6 = peg$parseLetters();
           }
           if (!identical(s5, peg$FAILED)) {
@@ -740,7 +742,7 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  ListOperand peg$parseSequence() {
+  ListOperand peg$parseSequence(Operand Function() pegParseExpression) {
     var s0, s1, s2, s3, s4, s5, s6, s7;
     final key = peg$currPos * 34 + 21;
     final ICached? cached = peg$resultsCache[key];
@@ -749,7 +751,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = peg$currPos;
-    s1 = peg$parseExpression();
+    s1 = pegParseExpression();
     if (identical(s1, peg$FAILED)) {
       s1 = null;
     }
@@ -770,7 +772,7 @@ peg$parse(String input, [IParseOptions? options]) {
         if (!identical(s5, peg$FAILED)) {
           s6 = peg$parse_();
           if (!identical(s6, peg$FAILED)) {
-            s7 = peg$parseExpression();
+            s7 = pegParseExpression();
             if (!identical(s7, peg$FAILED)) {
               s4 = [s4, s5, s6, s7];
               s3 = s4;
@@ -791,7 +793,7 @@ peg$parse(String input, [IParseOptions? options]) {
         s3 = peg$FAILED;
       }
       while (!identical(s3, peg$FAILED)) {
-        s2.push(s3);
+        s2.add(s3);
         s3 = peg$currPos;
         s4 = peg$parse_();
         if (!identical(s4, peg$FAILED)) {
@@ -807,7 +809,7 @@ peg$parse(String input, [IParseOptions? options]) {
           if (!identical(s5, peg$FAILED)) {
             s6 = peg$parse_();
             if (!identical(s6, peg$FAILED)) {
-              s7 = peg$parseExpression();
+              s7 = pegParseExpression();
               if (!identical(s7, peg$FAILED)) {
                 s4 = [s4, s5, s6, s7];
                 s3 = s4;
@@ -844,7 +846,7 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  dynamic peg$parseFunctionOp() {
+  dynamic peg$parseFunctionOp(Operand Function() pegParseExpression) {
     var s0, s1, s2, s3, s4;
     final key = peg$currPos * 34 + 15;
     final ICached? cached = peg$resultsCache[key];
@@ -865,7 +867,7 @@ peg$parse(String input, [IParseOptions? options]) {
         }
       }
       if (!identical(s2, peg$FAILED)) {
-        s3 = peg$parseSequence();
+        s3 = peg$parseSequence(pegParseExpression);
         if (!identical(s3, peg$FAILED)) {
           if (identical(input[peg$currPos].codeUnitAt(0), 41)) {
             s4 = peg$c84;
@@ -959,7 +961,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = [];
-    if (peg$c163.test(input[peg$currPos].codeUnitAt(0))) {
+    if (peg$c163.hasMatch(input[peg$currPos])) {
       s1 = input[peg$currPos].codeUnitAt(0);
       peg$currPos++;
     } else {
@@ -970,8 +972,8 @@ peg$parse(String input, [IParseOptions? options]) {
     }
     if (!identical(s1, peg$FAILED)) {
       while (!identical(s1, peg$FAILED)) {
-        s0.push(s1);
-        if (peg$c163.test(input[peg$currPos].codeUnitAt(0))) {
+        s0.add(s1);
+        if (peg$c163.hasMatch(input[peg$currPos])) {
           s1 = input[peg$currPos].codeUnitAt(0);
           peg$currPos++;
         } else {
@@ -1102,7 +1104,7 @@ peg$parse(String input, [IParseOptions? options]) {
     }
     if (identical(s0, peg$FAILED)) {
       s0 = peg$currPos;
-      if (peg$c139.test(input[peg$currPos].codeUnitAt(0))) {
+      if (peg$c139.hasMatch(input[peg$currPos])) {
         s1 = input[peg$currPos].codeUnitAt(0);
         peg$currPos++;
       } else {
@@ -1174,7 +1176,7 @@ peg$parse(String input, [IParseOptions? options]) {
       s0 = s1;
       if (identical(s0, peg$FAILED)) {
         s0 = peg$currPos;
-        if (peg$c156.test(input[peg$currPos].codeUnitAt(0))) {
+        if (peg$c156.hasMatch(input[peg$currPos])) {
           s1 = input[peg$currPos].codeUnitAt(0);
           peg$currPos++;
         } else {
@@ -1207,7 +1209,7 @@ peg$parse(String input, [IParseOptions? options]) {
     s2 = peg$parseAnyCharacters();
     if (!identical(s2, peg$FAILED)) {
       while (!identical(s2, peg$FAILED)) {
-        s1.push(s2);
+        s1.add(s2);
         s2 = peg$parseAnyCharacters();
       }
     } else {
@@ -1382,7 +1384,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = peg$currPos;
-    if (peg$c159.test(input[peg$currPos].codeUnitAt(0))) {
+    if (peg$c159.hasMatch(input[peg$currPos])) {
       s1 = input[peg$currPos].codeUnitAt(0);
       peg$currPos++;
     } else {
@@ -1413,7 +1415,7 @@ peg$parse(String input, [IParseOptions? options]) {
     s2 = peg$parseValueCharacters();
     if (!identical(s2, peg$FAILED)) {
       while (!identical(s2, peg$FAILED)) {
-        s1.push(s2);
+        s1.add(s2);
         s2 = peg$parseValueCharacters();
       }
     } else {
@@ -1548,7 +1550,10 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = peg$currPos;
-    if (identical(input.substring(peg$currPos, 5).toLowerCase(), peg$c94)) {
+    print(input);
+    print(peg$currPos);
+    if (identical(
+        input.substring(peg$currPos, peg$currPos + 5).toLowerCase(), peg$c94)) {
       s1 = input.substring(peg$currPos, 5);
       peg$currPos += 5;
     } else {
@@ -1583,7 +1588,7 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  dynamic peg$parseUnaryFunctionOp() {
+  dynamic peg$parseUnaryFunctionOp(Operand Function() pegParseExpression) {
     var s0, s1, s2, s3;
     final key = peg$currPos * 34 + 16;
     final ICached? cached = peg$resultsCache[key];
@@ -1615,7 +1620,7 @@ peg$parse(String input, [IParseOptions? options]) {
     if (!identical(s1, peg$FAILED)) {
       s2 = peg$parse_();
       if (!identical(s2, peg$FAILED)) {
-        s3 = peg$parseExpression();
+        s3 = pegParseExpression();
         if (!identical(s3, peg$FAILED)) {
           peg$savedPos = s0;
           s1 = peg$c92(s3);
@@ -1660,7 +1665,7 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  dynamic peg$parseArrayOp() {
+  dynamic peg$parseArrayOp(Operand Function() pegParseExpression) {
     var s0, s1, s2, s3;
     final key = peg$currPos * 34 + 20;
     final ICached? cached = peg$resultsCache[key];
@@ -1679,7 +1684,7 @@ peg$parse(String input, [IParseOptions? options]) {
       }
     }
     if (!identical(s1, peg$FAILED)) {
-      s2 = peg$parseSequence();
+      s2 = peg$parseSequence(pegParseExpression);
       if (!identical(s2, peg$FAILED)) {
         if (identical(input[peg$currPos].codeUnitAt(0), 93)) {
           s3 = peg$c124;
@@ -1710,7 +1715,7 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  Operand peg$parseFactor() {
+  Operand peg$parseFactor(Operand Function() pegParseExpression) {
     var s0, s1, s2, s3, s4, s5;
     final key = peg$currPos * 34 + 14;
     final ICached? cached = peg$resultsCache[key];
@@ -1731,7 +1736,7 @@ peg$parse(String input, [IParseOptions? options]) {
     if (!identical(s1, peg$FAILED)) {
       s2 = peg$parse_();
       if (!identical(s2, peg$FAILED)) {
-        s3 = peg$parseExpression();
+        s3 = pegParseExpression();
         if (!identical(s3, peg$FAILED)) {
           s4 = peg$parse_();
           if (!identical(s4, peg$FAILED)) {
@@ -1772,13 +1777,13 @@ peg$parse(String input, [IParseOptions? options]) {
       s0 = peg$FAILED;
     }
     if (identical(s0, peg$FAILED)) {
-      s0 = peg$parseFunctionOp();
+      s0 = peg$parseFunctionOp(pegParseExpression);
       if (identical(s0, peg$FAILED)) {
-        s0 = peg$parseUnaryFunctionOp();
+        s0 = peg$parseUnaryFunctionOp(pegParseExpression);
         if (identical(s0, peg$FAILED)) {
           s0 = peg$parseAtom();
           if (identical(s0, peg$FAILED)) {
-            s0 = peg$parseArrayOp();
+            s0 = peg$parseArrayOp(pegParseExpression);
           }
         }
       }
@@ -1796,7 +1801,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = peg$currPos;
-    if (identical(input.substring(peg$currPos, 2), peg$c64)) {
+    if (identical(input.substring(peg$currPos, peg$currPos + 2), peg$c64)) {
       s1 = peg$c64;
       peg$currPos += 2;
     } else {
@@ -1862,7 +1867,9 @@ peg$parse(String input, [IParseOptions? options]) {
       s0 = s1;
       if (identical(s0, peg$FAILED)) {
         s0 = peg$currPos;
-        if (identical(input.substring(peg$currPos, 5).toLowerCase(), peg$c76)) {
+        if (identical(
+            input.substring(peg$currPos, peg$currPos + 5).toLowerCase(),
+            peg$c76)) {
           s1 = input.substring(peg$currPos, 5);
           peg$currPos += 5;
         } else {
@@ -1879,7 +1886,8 @@ peg$parse(String input, [IParseOptions? options]) {
         if (identical(s0, peg$FAILED)) {
           s0 = peg$currPos;
           if (identical(
-              input.substring(peg$currPos, 5).toLowerCase(), peg$c79)) {
+              input.substring(peg$currPos, peg$currPos + 5).toLowerCase(),
+              peg$c79)) {
             s1 = input.substring(peg$currPos, 5);
             peg$currPos += 5;
           } else {
@@ -1900,7 +1908,7 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  dynamic peg$parseBinaryFuncOp() {
+  dynamic peg$parseBinaryFuncOp(Operand Function() pegParseExpression) {
     var s0, s1, s2, s3, s4, s5, s6, s7;
     final key = peg$currPos * 34 + 12;
     final ICached? cached = peg$resultsCache[key];
@@ -1909,7 +1917,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = peg$currPos;
-    s1 = peg$parseFactor();
+    s1 = peg$parseFactor(pegParseExpression);
     if (!identical(s1, peg$FAILED)) {
       s2 = [];
       s3 = peg$currPos;
@@ -1919,7 +1927,7 @@ peg$parse(String input, [IParseOptions? options]) {
         if (!identical(s5, peg$FAILED)) {
           s6 = peg$parse_();
           if (!identical(s6, peg$FAILED)) {
-            s7 = peg$parseFactor();
+            s7 = peg$parseFactor(pegParseExpression);
             if (identical(s7, peg$FAILED)) {
               s7 = null;
             }
@@ -1943,7 +1951,7 @@ peg$parse(String input, [IParseOptions? options]) {
         s3 = peg$FAILED;
       }
       while (!identical(s3, peg$FAILED)) {
-        s2.push(s3);
+        s2.add(s3);
         s3 = peg$currPos;
         s4 = peg$parse_();
         if (!identical(s4, peg$FAILED)) {
@@ -1951,7 +1959,7 @@ peg$parse(String input, [IParseOptions? options]) {
           if (!identical(s5, peg$FAILED)) {
             s6 = peg$parse_();
             if (!identical(s6, peg$FAILED)) {
-              s7 = peg$parseFactor();
+              s7 = peg$parseFactor(pegParseExpression);
               if (identical(s7, peg$FAILED)) {
                 s7 = null;
               }
@@ -2010,7 +2018,8 @@ peg$parse(String input, [IParseOptions? options]) {
       }
     }
     if (identical(s1, peg$FAILED)) {
-      if (identical(input.substring(peg$currPos, 5).toLowerCase(), peg$c61)) {
+      if (identical(input.substring(peg$currPos, peg$currPos + 5).toLowerCase(),
+          peg$c61)) {
         s1 = input.substring(peg$currPos, 5);
         peg$currPos += 5;
       } else {
@@ -2029,7 +2038,7 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  BinaryOperand peg$parseMulDivOps() {
+  BinaryOperand peg$parseMulDivOps(Operand Function() pegParseExpression) {
     var s0, s1, s2, s3, s4, s5, s6, s7;
     final key = peg$currPos * 34 + 10;
     final ICached? cached = peg$resultsCache[key];
@@ -2038,7 +2047,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = peg$currPos;
-    s1 = peg$parseBinaryFuncOp();
+    s1 = peg$parseBinaryFuncOp(pegParseExpression);
     if (!identical(s1, peg$FAILED)) {
       s2 = [];
       s3 = peg$currPos;
@@ -2048,7 +2057,7 @@ peg$parse(String input, [IParseOptions? options]) {
         if (!identical(s5, peg$FAILED)) {
           s6 = peg$parse_();
           if (!identical(s6, peg$FAILED)) {
-            s7 = peg$parseBinaryFuncOp();
+            s7 = peg$parseBinaryFuncOp(pegParseExpression);
             if (!identical(s7, peg$FAILED)) {
               s4 = [s4, s5, s6, s7];
               s3 = s4;
@@ -2069,7 +2078,7 @@ peg$parse(String input, [IParseOptions? options]) {
         s3 = peg$FAILED;
       }
       while (!identical(s3, peg$FAILED)) {
-        s2.push(s3);
+        s2.add(s3);
         s3 = peg$currPos;
         s4 = peg$parse_();
         if (!identical(s4, peg$FAILED)) {
@@ -2077,7 +2086,7 @@ peg$parse(String input, [IParseOptions? options]) {
           if (!identical(s5, peg$FAILED)) {
             s6 = peg$parse_();
             if (!identical(s6, peg$FAILED)) {
-              s7 = peg$parseBinaryFuncOp();
+              s7 = peg$parseBinaryFuncOp(pegParseExpression);
               if (!identical(s7, peg$FAILED)) {
                 s4 = [s4, s5, s6, s7];
                 s3 = s4;
@@ -2175,7 +2184,7 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  BinaryOperand peg$parsePlusMinusOps() {
+  BinaryOperand peg$parsePlusMinusOps(Operand Function() pegParseExpression) {
     var s0, s1, s2, s3, s4, s5, s6, s7;
     final key = peg$currPos * 34 + 8;
     final ICached? cached = peg$resultsCache[key];
@@ -2184,7 +2193,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = peg$currPos;
-    s1 = peg$parseMulDivOps();
+    s1 = peg$parseMulDivOps(pegParseExpression);
     if (!identical(s1, peg$FAILED)) {
       s2 = [];
       s3 = peg$currPos;
@@ -2194,7 +2203,7 @@ peg$parse(String input, [IParseOptions? options]) {
         if (!identical(s5, peg$FAILED)) {
           s6 = peg$parse_();
           if (!identical(s6, peg$FAILED)) {
-            s7 = peg$parseMulDivOps();
+            s7 = peg$parseMulDivOps(pegParseExpression);
             if (!identical(s7, peg$FAILED)) {
               s4 = [s4, s5, s6, s7];
               s3 = s4;
@@ -2215,7 +2224,7 @@ peg$parse(String input, [IParseOptions? options]) {
         s3 = peg$FAILED;
       }
       while (!identical(s3, peg$FAILED)) {
-        s2.push(s3);
+        s2.add(s3);
         s3 = peg$currPos;
         s4 = peg$parse_();
         if (!identical(s4, peg$FAILED)) {
@@ -2223,7 +2232,7 @@ peg$parse(String input, [IParseOptions? options]) {
           if (!identical(s5, peg$FAILED)) {
             s6 = peg$parse_();
             if (!identical(s6, peg$FAILED)) {
-              s7 = peg$parseMulDivOps();
+              s7 = peg$parseMulDivOps(pegParseExpression);
               if (!identical(s7, peg$FAILED)) {
                 s4 = [s4, s5, s6, s7];
                 s3 = s4;
@@ -2304,7 +2313,7 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  BinaryOperand peg$parseCompOps() {
+  BinaryOperand peg$parseCompOps(Operand Function() pegParseExpression) {
     var s0, s1, s2, s3, s4, s5, s6, s7;
     final key = peg$currPos * 34 + 6;
     final ICached? cached = peg$resultsCache[key];
@@ -2313,7 +2322,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = peg$currPos;
-    s1 = peg$parsePlusMinusOps();
+    s1 = peg$parsePlusMinusOps(pegParseExpression);
     if (!identical(s1, peg$FAILED)) {
       s2 = [];
       s3 = peg$currPos;
@@ -2323,7 +2332,7 @@ peg$parse(String input, [IParseOptions? options]) {
         if (!identical(s5, peg$FAILED)) {
           s6 = peg$parse_();
           if (!identical(s6, peg$FAILED)) {
-            s7 = peg$parsePlusMinusOps();
+            s7 = peg$parsePlusMinusOps(pegParseExpression);
             if (!identical(s7, peg$FAILED)) {
               s4 = [s4, s5, s6, s7];
               s3 = s4;
@@ -2344,7 +2353,7 @@ peg$parse(String input, [IParseOptions? options]) {
         s3 = peg$FAILED;
       }
       while (!identical(s3, peg$FAILED)) {
-        s2.push(s3);
+        s2.add(s3);
         s3 = peg$currPos;
         s4 = peg$parse_();
         if (!identical(s4, peg$FAILED)) {
@@ -2352,7 +2361,7 @@ peg$parse(String input, [IParseOptions? options]) {
           if (!identical(s5, peg$FAILED)) {
             s6 = peg$parse_();
             if (!identical(s6, peg$FAILED)) {
-              s7 = peg$parsePlusMinusOps();
+              s7 = peg$parsePlusMinusOps(pegParseExpression);
               if (!identical(s7, peg$FAILED)) {
                 s4 = [s4, s5, s6, s7];
                 s3 = s4;
@@ -2601,7 +2610,7 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  BinaryOperand peg$parseLogicAnd() {
+  BinaryOperand peg$parseLogicAnd(Operand Function() pegParseExpression) {
     var s0, s1, s2, s3, s4, s5, s6, s7;
     final key = peg$currPos * 34 + 4;
     final ICached? cached = peg$resultsCache[key];
@@ -2610,7 +2619,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = peg$currPos;
-    s1 = peg$parseCompOps();
+    s1 = peg$parseCompOps(pegParseExpression);
     if (!identical(s1, peg$FAILED)) {
       s2 = [];
       s3 = peg$currPos;
@@ -2620,7 +2629,7 @@ peg$parse(String input, [IParseOptions? options]) {
         if (!identical(s5, peg$FAILED)) {
           s6 = peg$parse_();
           if (!identical(s6, peg$FAILED)) {
-            s7 = peg$parseCompOps();
+            s7 = peg$parseCompOps(pegParseExpression);
             if (!identical(s7, peg$FAILED)) {
               s4 = [s4, s5, s6, s7];
               s3 = s4;
@@ -2641,7 +2650,7 @@ peg$parse(String input, [IParseOptions? options]) {
         s3 = peg$FAILED;
       }
       while (!identical(s3, peg$FAILED)) {
-        s2.push(s3);
+        s2.add(s3);
         s3 = peg$currPos;
         s4 = peg$parse_();
         if (!identical(s4, peg$FAILED)) {
@@ -2649,7 +2658,7 @@ peg$parse(String input, [IParseOptions? options]) {
           if (!identical(s5, peg$FAILED)) {
             s6 = peg$parse_();
             if (!identical(s6, peg$FAILED)) {
-              s7 = peg$parseCompOps();
+              s7 = peg$parseCompOps(pegParseExpression);
               if (!identical(s7, peg$FAILED)) {
                 s4 = [s4, s5, s6, s7];
                 s3 = s4;
@@ -2724,7 +2733,7 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  BinaryOperand peg$parseLogicOr() {
+  BinaryOperand peg$parseLogicOr(Operand Function() pegParseExpression) {
     var s0, s1, s2, s3, s4, s5, s6, s7;
     final key = peg$currPos * 34 + 2;
     final ICached? cached = peg$resultsCache[key];
@@ -2733,7 +2742,7 @@ peg$parse(String input, [IParseOptions? options]) {
       return cached.result;
     }
     s0 = peg$currPos;
-    s1 = peg$parseLogicAnd();
+    s1 = peg$parseLogicAnd(pegParseExpression);
     if (!identical(s1, peg$FAILED)) {
       s2 = [];
       s3 = peg$currPos;
@@ -2743,7 +2752,7 @@ peg$parse(String input, [IParseOptions? options]) {
         if (!identical(s5, peg$FAILED)) {
           s6 = peg$parse_();
           if (!identical(s6, peg$FAILED)) {
-            s7 = peg$parseLogicAnd();
+            s7 = peg$parseLogicAnd(pegParseExpression);
             if (!identical(s7, peg$FAILED)) {
               s4 = [s4, s5, s6, s7];
               s3 = s4;
@@ -2764,7 +2773,7 @@ peg$parse(String input, [IParseOptions? options]) {
         s3 = peg$FAILED;
       }
       while (!identical(s3, peg$FAILED)) {
-        s2.push(s3);
+        s2.add(s3);
         s3 = peg$currPos;
         s4 = peg$parse_();
         if (!identical(s4, peg$FAILED)) {
@@ -2772,7 +2781,7 @@ peg$parse(String input, [IParseOptions? options]) {
           if (!identical(s5, peg$FAILED)) {
             s6 = peg$parse_();
             if (!identical(s6, peg$FAILED)) {
-              s7 = peg$parseLogicAnd();
+              s7 = peg$parseLogicAnd(pegParseExpression);
               if (!identical(s7, peg$FAILED)) {
                 s4 = [s4, s5, s6, s7];
                 s3 = s4;
@@ -2847,7 +2856,8 @@ peg$parse(String input, [IParseOptions? options]) {
     return s0;
   }
 
-  Operand peg$parseExpression() {
+  Operand Function()? peg$parseExpression;
+  peg$parseExpression = () {
     var s0, s1, s2, s3, s4, s5, s6, s7, s8;
     final key = peg$currPos * 34 + 0;
     final ICached? cached = peg$resultsCache[key];
@@ -2858,7 +2868,7 @@ peg$parse(String input, [IParseOptions? options]) {
     s0 = peg$currPos;
     s1 = peg$parse_();
     if (!identical(s1, peg$FAILED)) {
-      s2 = peg$parseLogicOr();
+      s2 = peg$parseLogicOr(peg$parseExpression!);
       if (!identical(s2, peg$FAILED)) {
         s3 = [];
         s4 = peg$currPos;
@@ -2868,7 +2878,7 @@ peg$parse(String input, [IParseOptions? options]) {
           if (!identical(s6, peg$FAILED)) {
             s7 = peg$parse_();
             if (!identical(s7, peg$FAILED)) {
-              s8 = peg$parseLogicOr();
+              s8 = peg$parseLogicOr(peg$parseExpression!);
               if (!identical(s8, peg$FAILED)) {
                 s5 = [s5, s6, s7, s8];
                 s4 = s5;
@@ -2889,7 +2899,7 @@ peg$parse(String input, [IParseOptions? options]) {
           s4 = peg$FAILED;
         }
         while (!identical(s4, peg$FAILED)) {
-          s3.push(s4);
+          s3.add(s4);
           s4 = peg$currPos;
           s5 = peg$parse_();
           if (!identical(s5, peg$FAILED)) {
@@ -2897,7 +2907,7 @@ peg$parse(String input, [IParseOptions? options]) {
             if (!identical(s6, peg$FAILED)) {
               s7 = peg$parse_();
               if (!identical(s7, peg$FAILED)) {
-                s8 = peg$parseLogicOr();
+                s8 = peg$parseLogicOr(peg$parseExpression!);
                 if (!identical(s8, peg$FAILED)) {
                   s5 = [s5, s6, s7, s8];
                   s4 = s5;
@@ -2942,7 +2952,7 @@ peg$parse(String input, [IParseOptions? options]) {
     }
     peg$resultsCache[key] = ICached(nextPos: peg$currPos, result: s0);
     return s0;
-  }
+  };
 
   final Map<String, dynamic> peg$startRuleFunctions = {
     "Expression": peg$parseExpression
@@ -3038,10 +3048,6 @@ peg$parse(String input, [IParseOptions? options]) {
 
   IEndExpectation peg$endExpectation() {
     return IEndExpectation();
-  }
-
-  List<dynamic> flattenArray(List<dynamic> array) {
-    return [].concat.apply([], array);
   }
 
   peg$result = peg$startRuleFunction();
