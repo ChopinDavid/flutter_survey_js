@@ -41,10 +41,19 @@ class SurveyElementFactory {
     register<s.Checkbox>(checkBoxBuilder,
         control: (element, {validators = const []}) =>
             fb.array([], validators));
-    register<s.Ranking>(rankingBuilder,
-        control: (element, {validators = const []}) =>
-            FormControl<List<dynamic>>(validators: validators));
-    register<s.Radiogroup>(radioGroupBuilder);
+    register<s.Ranking>(
+      rankingBuilder,
+      control: (element, {validators = const []}) => FormControl<List<Object?>>(
+          validators: validators,
+          value: (element as s.Ranking).defaultValue?.value as List<Object?>),
+    );
+    register<s.Radiogroup>(
+      radioGroupBuilder,
+      control: (element, {validators = const []}) => FormControl(
+        validators: validators,
+        value: (element as s.Radiogroup).defaultValue?.value,
+      ),
+    );
     register<s.Boolean>(
         //TODO ReactiveSwitch is not safe
         (context, element, {bool hasTitle = true}) {
@@ -80,23 +89,28 @@ class SurveyElementFactory {
             validators: validators,
             value: (element as s.Rating).defaultValue.tryCastToInt()));
 
-    register<s.Comment>((context, element, {bool hasTitle = true}) =>
-        ReactiveTextField(
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          style: Theme.of(context).textTheme.bodyMedium,
-          formControlName: element.name!,
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                borderSide: BorderSide(color: Colors.blue)),
-            filled: true,
-            contentPadding:
-                const EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
-            hintText: (element as s.Comment).placeholder,
-          ),
-        ).wrapQuestionTitle(element, hasTitle: hasTitle));
+    register<s.Comment>(
+      (context, element, {bool hasTitle = true}) => ReactiveTextField(
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
+        style: Theme.of(context).textTheme.bodyMedium,
+        formControlName: element.name!,
+        decoration: InputDecoration(
+          fillColor: Colors.white,
+          border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              borderSide: BorderSide(color: Colors.blue)),
+          filled: true,
+          contentPadding:
+              const EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
+          hintText: (element as s.Comment).placeholder,
+        ),
+      ).wrapQuestionTitle(element, hasTitle: hasTitle),
+      control: (element, {validators = const []}) => FormControl<String>(
+        validators: validators,
+        value: (element as s.Comment).defaultValue?.value.toString(),
+      ),
+    );
 
     register<s.Text>(textBuilder, control: textControlBuilder);
     register<s.Multipletext>(multipleTextBuilder,
@@ -124,9 +138,13 @@ class SurveyElementFactory {
     });
     // register<s.ImagePicker>(imagePickerBuilder);
     register<s.Dropdown>(dropdownBuilder,
-        control: (element, {validators = const []}) => FormControl<Object>(
-            validators: validators,
-            value: (element as s.Dropdown).defaultValue?.toString()));
+        control: (element, {validators = const []}) {
+      final defaultValue = (element as s.Dropdown).defaultValue;
+      return FormControl<Object>(
+        validators: validators,
+        value: defaultValue?.value.toString(),
+      );
+    });
     register<s.Paneldynamic>(panelDynamicBuilder);
     register<s.Panel>((context, element, {bool hasTitle = true}) {
       return Column(
