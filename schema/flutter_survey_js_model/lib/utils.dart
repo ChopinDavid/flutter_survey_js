@@ -202,7 +202,7 @@ extension ObjectExtension on Object? {
     if (this is bool) {
       return this as bool;
     }
-    return bool.tryParse(this.toString(), caseSensitive: false);
+    return this.toString().toLowerCase() == 'true';
   }
 
   String? tryCastToString() {
