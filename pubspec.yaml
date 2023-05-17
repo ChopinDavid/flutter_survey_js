@@ -37,7 +37,7 @@ dependencies:
   flutter_survey_js_model:
     git:
       url: https://github.com/wwt/flutter_survey_js.git
-      ref: c13655c04fc506936123fa381eea1381e9e73d76
+      ref: 97632504121ab80c166f7fc77aa9b37cf96c91ce
       path: schema/flutter_survey_js_model
   built_value: ">=8.4.0 <9.0.0"
   built_collection: ">=5.1.1 <6.0.0"
