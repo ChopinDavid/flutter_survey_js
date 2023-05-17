@@ -1,16 +1,18 @@
 import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_survey_js/ui/survey_configuration.dart';
 import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../generated/l10n.dart';
-import 'question_title.dart';
 
-Widget dropdownBuilder(context, element, {bool hasTitle = true}) {
+Widget dropdownBuilder(context, element,
+    {ElementConfiguration? configuration}) {
   final e = (element as s.Dropdown);
 
   return _DropdownWidgetWithOtherOption(
     dropdown: e,
+    configuration: configuration,
   );
 }
 
@@ -18,9 +20,11 @@ class _DropdownWidgetWithOtherOption<T> extends StatefulWidget {
   const _DropdownWidgetWithOtherOption({
     Key? key,
     required this.dropdown,
+    this.configuration,
   }) : super(key: key);
 
   final s.Dropdown dropdown;
+  final ElementConfiguration? configuration;
 
   @override
   State<_DropdownWidgetWithOtherOption> createState() =>
@@ -38,10 +42,11 @@ class _DropdownWidgetWithOtherOptionState
       return false;
     }
     final choiceMatch = widget.dropdown.choices
-        ?.map((e) => e.castToItemvalue().value?.value.toString());
-    return !(choiceMatch!.toList().contains(
-            controlValue is JsonObject ? controlValue.value : controlValue) ==
-        true);
+        ?.map((e) => e.castToItemvalue().value?.value.toString())
+        .toList();
+    return !(choiceMatch!.contains(controlValue is JsonObject
+        ? controlValue.tryCastToString()
+        : controlValue.toString()));
   }();
 
   var textEditingController = TextEditingController();
@@ -141,7 +146,7 @@ class _DropdownWidgetWithOtherOptionState
             ),
           ),
       ],
-    ).wrapQuestionTitle(e, hasTitle: true);
+    ).wrapQuestionTitle(context, e, configuration: widget.configuration);
   }
 }
 

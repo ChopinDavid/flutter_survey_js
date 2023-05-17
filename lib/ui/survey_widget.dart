@@ -89,26 +89,28 @@ class SurveyWidgetState extends State<SurveyWidget> {
     }
     final elementsState = ElementsState(status);
 
-    return ReactiveForm(
-      formGroup: formGroup,
-      child: StreamBuilder(
-        stream: formGroup.valueChanges,
-        builder: (BuildContext context,
-            AsyncSnapshot<Map<String, Object?>?> snapshot) {
-          return SurveyProvider(
-            survey: widget.survey,
-            formGroup: formGroup,
-            elementsState: elementsState,
-            currentPage: currentPage,
-            initialPage: initialPage,
-            showQuestionsInOnePage: widget.showQuestionsInOnePage,
-            child: Builder(
-                builder: (context) =>
-                    (widget.builder ?? defaultBuilder)(context)),
-          );
-        },
-      ),
-    );
+    return SurveyConfiguration.copyAncestor(
+        context: context,
+        child: ReactiveForm(
+          formGroup: formGroup,
+          child: StreamBuilder(
+            stream: formGroup.valueChanges,
+            builder: (BuildContext context,
+                AsyncSnapshot<Map<String, Object?>?> snapshot) {
+              return SurveyProvider(
+                survey: widget.survey,
+                formGroup: formGroup,
+                elementsState: elementsState,
+                currentPage: currentPage,
+                initialPage: initialPage,
+                showQuestionsInOnePage: widget.showQuestionsInOnePage,
+                child: Builder(
+                    builder: (context) =>
+                        (widget.builder ?? defaultBuilder)(context)),
+              );
+            },
+          ),
+        ));
   }
 
   void rebuildForm() {
@@ -118,13 +120,13 @@ class SurveyWidgetState extends State<SurveyWidget> {
     _controlsMap = {};
     _currentPage = 0;
 
-    formGroup = elementsToFormGroup(widget.survey.getElements(),
+    formGroup = elementsToFormGroup(context, widget.survey.getElements(),
         controlsMap: _controlsMap);
 
     final answer = widget.answer;
 
     if (answer != null && answer.isNotEmpty) {
-      formGroup.updateValue(widget.answer);
+      formGroup.patchValue(widget.answer);
     }
 
     _listener = formGroup.valueChanges.listen((event) {

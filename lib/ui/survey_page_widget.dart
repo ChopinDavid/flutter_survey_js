@@ -1,10 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_survey_js/ui/survey_configuration.dart';
 import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-import 'elements/survey_element_factory.dart';
+import 'survey_element_factory.dart';
 import 'panel_title.dart';
 
 class SurveyPageWidget extends StatefulWidget {
@@ -128,7 +129,7 @@ class SurveyPageWidgetState extends State<SurveyPageWidget> {
                     itemBuilder: (context, index) {
                       if (index < widget.page.elementsOrQuestions!.length &&
                           index >= 0) {
-                        return SurveyElementFactory().resolve(
+                        return SurveyConfiguration.of(context)!.factory.resolve(
                             context,
                             widget
                                 .page.elementsOrQuestions![index].realElement);
@@ -143,9 +144,8 @@ class SurveyPageWidgetState extends State<SurveyPageWidget> {
                       }
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return SurveyElementFactory()
-                          .separatorBuilder
-                          .call(context);
+                      return SurveyConfiguration.of(context)!
+                          .separatorBuilder(context);
                     },
                   ),
                 ),

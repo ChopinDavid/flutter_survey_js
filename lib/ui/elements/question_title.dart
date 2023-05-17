@@ -101,19 +101,3 @@ class QuestionTitle extends StatelessWidget {
     );
   }
 }
-
-extension QuestionTitleExtension on Widget {
-  Widget wrapQuestionTitle(s.Elementbase element, {required bool hasTitle}) {
-    if (!hasTitle) {
-      //in a matrix
-      return this;
-    }
-    if (element is s.Question) {
-      return QuestionTitle(
-        q: element,
-        child: this,
-      );
-    }
-    return this;
-  }
-}
