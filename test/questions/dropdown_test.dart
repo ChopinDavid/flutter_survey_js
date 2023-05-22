@@ -263,123 +263,125 @@ void main() {
     expect(find.text(noneText), findsWidgets);
   });
 
-  testWidgets(
-      'displays "otherText" and existing answer when existing answer is not a choice and showOtherItem is true',
-      (WidgetTester tester) async {
-    const otherText = "Other size";
-    const questionName = "What t-shirt size do you want?";
-    const existingAnswer = "XS";
+  group('existing answer', () {
+    testWidgets(
+        'displays "otherText" and existing answer when existing answer is not a choice and showOtherItem is true',
+        (WidgetTester tester) async {
+      const otherText = "Other size";
+      const questionName = "What t-shirt size do you want?";
+      const existingAnswer = "XS";
 
-    await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: const [
-          appLocalizationDelegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        home: Material(
-          child: SurveyWidget(
-              answer: const {questionName: existingAnswer},
-              survey: surveyFromJson(const {
-                "questions": [
-                  {
-                    "type": "dropdown",
-                    "name": questionName,
-                    "isRequired": true,
-                    "choices": [
-                      "S",
-                      "M",
-                      "L",
-                      "XL",
-                    ],
-                    "showOtherItem": true,
-                    "otherText": otherText,
-                  }
-                ]
-              })!),
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: const [
+            appLocalizationDelegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          home: Material(
+            child: SurveyWidget(
+                answer: const {questionName: existingAnswer},
+                survey: surveyFromJson(const {
+                  "questions": [
+                    {
+                      "type": "dropdown",
+                      "name": questionName,
+                      "isRequired": true,
+                      "choices": [
+                        "S",
+                        "M",
+                        "L",
+                        "XL",
+                      ],
+                      "showOtherItem": true,
+                      "otherText": otherText,
+                    }
+                  ]
+                })!),
+          ),
         ),
-      ),
-    );
+      );
 
-    await tester.pump();
-    await tester.idle();
+      await tester.pump();
+      await tester.idle();
 
-    final DropdownButton dropdownButton =
-        tester.widget<DropdownButton>(find.byType(DropdownButton));
-    final DropdownMenuItem selectedMenuItem = dropdownButton.items!
-        .singleWhere((element) => element.value == dropdownButton.value);
-    expect(
-      (selectedMenuItem.child as Text).data,
-      otherText,
-    );
-    expect(
-      tester
-          .widget<TextField>(find.descendant(
-              of: find.byType(ReactiveTextField),
-              matching: find.byType(TextField)))
-          .controller
-          ?.text,
-      existingAnswer,
-    );
-  });
+      final DropdownButton dropdownButton =
+          tester.widget<DropdownButton>(find.byType(DropdownButton));
+      final DropdownMenuItem selectedMenuItem = dropdownButton.items!
+          .singleWhere((element) => element.value == dropdownButton.value);
+      expect(
+        (selectedMenuItem.child as Text).data,
+        otherText,
+      );
+      expect(
+        tester
+            .widget<TextField>(find.descendant(
+                of: find.byType(ReactiveTextField),
+                matching: find.byType(TextField)))
+            .controller
+            ?.text,
+        existingAnswer,
+      );
+    });
 
-  testWidgets(
-      'displays existing answer when existing answer is a choice and showOtherText is true',
-      (WidgetTester tester) async {
-    const otherText = "Other size";
-    const questionName = "What t-shirt size do you want?";
-    const existingAnswer = "M";
+    testWidgets(
+        'displays existing answer when existing answer is a choice and showOtherText is true',
+        (WidgetTester tester) async {
+      const otherText = "Other size";
+      const questionName = "What t-shirt size do you want?";
+      const existingAnswer = "M";
 
-    await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: const [
-          appLocalizationDelegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        home: Material(
-          child: SurveyWidget(
-              answer: const {questionName: existingAnswer},
-              survey: surveyFromJson(const {
-                "questions": [
-                  {
-                    "type": "dropdown",
-                    "name": questionName,
-                    "isRequired": true,
-                    "choices": [
-                      "S",
-                      existingAnswer,
-                      "L",
-                      "XL",
-                    ],
-                    "showOtherItem": true,
-                    "otherText": otherText,
-                  }
-                ]
-              })!),
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: const [
+            appLocalizationDelegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          home: Material(
+            child: SurveyWidget(
+                answer: const {questionName: existingAnswer},
+                survey: surveyFromJson(const {
+                  "questions": [
+                    {
+                      "type": "dropdown",
+                      "name": questionName,
+                      "isRequired": true,
+                      "choices": [
+                        "S",
+                        existingAnswer,
+                        "L",
+                        "XL",
+                      ],
+                      "showOtherItem": true,
+                      "otherText": otherText,
+                    }
+                  ]
+                })!),
+          ),
         ),
-      ),
-    );
+      );
 
-    await tester.pump();
-    await tester.idle();
+      await tester.pump();
+      await tester.idle();
 
-    final DropdownButton dropdownButton =
-        tester.widget<DropdownButton>(find.byType(DropdownButton));
-    final DropdownMenuItem selectedMenuItem = dropdownButton.items!
-        .singleWhere((element) => element.value == dropdownButton.value);
-    expect(
-      (selectedMenuItem.child as Text).data,
-      existingAnswer,
-    );
-    expect(find.byType(ReactiveTextField), findsNothing);
+      final DropdownButton dropdownButton =
+          tester.widget<DropdownButton>(find.byType(DropdownButton));
+      final DropdownMenuItem selectedMenuItem = dropdownButton.items!
+          .singleWhere((element) => element.value == dropdownButton.value);
+      expect(
+        (selectedMenuItem.child as Text).data,
+        existingAnswer,
+      );
+      expect(find.byType(ReactiveTextField), findsNothing);
+    });
   });
 
   group('Other error text', () {
     testWidgets(
-        'does not continue to display after a selecting an existing answer then re-selecting the Other field',
+        'does not continue to display after selecting an existing answer then re-selecting the Other field',
         (WidgetTester tester) async {
       const otherText = "Other size";
       const questionName = "What t-shirt size do you want?";
