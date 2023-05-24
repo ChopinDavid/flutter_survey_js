@@ -3,7 +3,6 @@ import 'package:flutter_survey_js/ui/elements/boolean.dart';
 import 'package:flutter_survey_js/ui/elements/comment.dart';
 import 'package:flutter_survey_js/ui/elements/matrix_dropdown.dart';
 import 'package:flutter_survey_js/ui/elements/panel.dart';
-import 'package:flutter_survey_js/ui/reactive/always_update_form_array.dart';
 import 'package:flutter_survey_js/ui/reactive/reactive_signature_string.dart';
 import 'package:flutter_survey_js/ui/survey_configuration.dart';
 import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
@@ -36,12 +35,21 @@ class SurveyElementFactory {
     register<s.Matrixdropdown>(matrixDropdownBuilder);
     register<s.Matrixdynamic>(matrixDynamicBuilder);
     register<s.Checkbox>(checkBoxBuilder,
-        control: (context, element, {validators = const [], value}) =>
-            alwaysUpdateArray(
-                (element as s.Checkbox).defaultValue.tryCastToListObj() ??
-                    value.tryCastToList() ??
-                    [],
-                validators));
+        control: (context, element, {validators = const [], value}) {
+      var value = <String, dynamic>{};
+      value[element.name!] = <String>[];
+      final s.Checkbox checkbox = element as s.Checkbox;
+      checkbox.choices?.forEach((choice) {
+        //TODO: set to defaultValue and default to false
+      });
+      if (checkbox.showNoneItem ?? false) {
+        //TODO: set to defaultValue and default to false
+      }
+      if (checkbox.showOtherItem ?? false) {
+        //TODO: set to defaultValue and default to null
+      }
+      return FormControl<Map<String, dynamic>>(value: value);
+    });
     register<s.Ranking>(rankingBuilder,
         control: (context, element, {validators = const [], value}) =>
             FormControl<List<dynamic>>(
