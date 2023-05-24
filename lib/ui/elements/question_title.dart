@@ -42,16 +42,16 @@ class QuestionTitle extends StatelessWidget {
         if (status != null) {
           const Key questionNumberTextKey = Key('question-number-text');
           if ((survey.survey.showQuestionNumbers?.isOn ?? true) &&
-              status.indexAll != null) {
+              status['main']?.indexAll != null) {
             return Text(
-              '${status.indexAll! + 1}. ',
+              '${(status['main']?.indexAll ?? 0) + 1}. ',
               key: questionNumberTextKey,
               style: titleTextStyle(),
             );
           } else if ((survey.survey.showQuestionNumbers?.isOnPage ?? false) &&
-              status.indexInPage != null) {
+              status['main']?.indexInPage != null) {
             return Text(
-              '${status.indexInPage! + 1}. ',
+              '${(status['main']?.indexInPage ?? 0) + 1}. ',
               key: questionNumberTextKey,
               style: titleTextStyle(),
             );

@@ -135,7 +135,8 @@ void main() {
           child: SurveyWidget(
             survey: surveyFromJson(extended)!,
             answer: const {
-              "warships": ["UNN Thomas Prince"]
+              "warships": ["other"],
+              "warships-Comment": "UNN Thomas Prince",
             },
           ),
         ),
@@ -175,7 +176,8 @@ void main() {
           child: SurveyWidget(
             survey: surveyFromJson(extended)!,
             answer: const {
-              "warships": ["UNN Thomas Prince"]
+              "warships": ["other"],
+              "warships-Comment": "UNN Thomas Prince"
             },
           ),
         ),

@@ -29,6 +29,8 @@ class SurveyElementFactory {
       <String, SurveyElementBuilder>{};
   final Map<String, SurveyFormControlBuilder> _formControlMap =
       <String, SurveyFormControlBuilder>{};
+  final Map<String, SurveyFormControlBuilder> _commentFormControlMap =
+      <String, SurveyFormControlBuilder>{};
 
   SurveyElementFactory() {
     register<s.Matrix>(matrixBuilder);
@@ -36,9 +38,11 @@ class SurveyElementFactory {
     register<s.Matrixdynamic>(matrixDynamicBuilder);
     register<s.Checkbox>(checkBoxBuilder,
         control: (context, element, {validators = const [], value}) {
-      var value = <String, dynamic>{};
-      value[element.name!] = <String>[];
+      var value = <String>[];
       final s.Checkbox checkbox = element as s.Checkbox;
+      // final List<String> defaultValues =
+      //     (checkbox.defaultValue as ListJsonObject).value as List<String>;
+      // print(defaultValues);
       checkbox.choices?.forEach((choice) {
         //TODO: set to defaultValue and default to false
       });
@@ -48,8 +52,11 @@ class SurveyElementFactory {
       if (checkbox.showOtherItem ?? false) {
         //TODO: set to defaultValue and default to null
       }
-      return FormControl<Map<String, dynamic>>(value: value);
+      return FormControl<List<String>>(value: value);
     });
+    registerComment<s.Checkbox>((context, element,
+            {validators = const [], value}) =>
+        FormControl<String?>(value: null));
     register<s.Ranking>(rankingBuilder,
         control: (context, element, {validators = const [], value}) =>
             FormControl<List<dynamic>>(
@@ -136,6 +143,16 @@ class SurveyElementFactory {
     }
   }
 
+  void registerComment<T>(SurveyFormControlBuilder? control) {
+    final name = s.questionTypeName[T];
+    if (name == null) {
+      throw UnsupportedError("element type $T not supported");
+    }
+    if (control != null) {
+      _commentFormControlMap[name] = control;
+    }
+  }
+
   Widget resolve(BuildContext context, s.Elementbase element,
       {ElementConfiguration? configuration}) {
     var res = _map[element.type];
@@ -153,5 +170,9 @@ class SurveyElementFactory {
 
   SurveyFormControlBuilder? resolveFormControl(s.Elementbase element) {
     return _formControlMap[element.type];
+  }
+
+  SurveyFormControlBuilder? resolveCommentFormControl(s.Elementbase element) {
+    return _commentFormControlMap[element.type];
   }
 }

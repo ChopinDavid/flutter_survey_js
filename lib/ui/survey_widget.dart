@@ -43,7 +43,8 @@ class SurveyWidget extends StatefulWidget {
 class SurveyWidgetState extends State<SurveyWidget> {
   final Logger logger = Logger('SurveyWidgetState');
   late FormGroup formGroup;
-  late Map<s.Elementbase, Object> _controlsMap;
+  late Map<s.Elementbase, AbstractControl<dynamic>> _controlsMap;
+  late Map<s.Elementbase, AbstractControl<dynamic>> _commentsControlsMap;
 
   late int pageCount;
 
@@ -79,15 +80,20 @@ class SurveyWidgetState extends State<SurveyWidget> {
     //TODO recalculate page count and visible
     //TODO calculate status
     Map<s.Elementbase, ElementStatus> status = {};
-    int index = 0;
+    Map<s.Elementbase, ElementStatus> commentStatus = {};
+    int statusIndex = 0;
     for (final kv in _controlsMap.entries) {
-      var visible = true;
-      status[kv.key] = ElementStatus(indexAll: index);
-      if (visible) {
-        index++;
-      }
+      status[kv.key] = ElementStatus(indexAll: statusIndex);
+      statusIndex++;
     }
-    final elementsState = ElementsState(status);
+
+    int commentStatusIndex = 0;
+    for (final kv in _commentsControlsMap.entries) {
+      commentStatus[kv.key] = ElementStatus(indexAll: commentStatusIndex);
+      commentStatusIndex++;
+    }
+
+    final elementsState = ElementsState(status, commentStatus);
 
     return SurveyConfiguration.copyAncestor(
         context: context,
@@ -118,10 +124,11 @@ class SurveyWidgetState extends State<SurveyWidget> {
     _listener?.cancel();
     //clear
     _controlsMap = {};
+    _commentsControlsMap = {};
     _currentPage = 0;
 
     formGroup = elementsToFormGroup(context, widget.survey.getElements(),
-        controlsMap: _controlsMap);
+        controlsMap: _controlsMap, commentsControlsMap: _commentsControlsMap);
 
     final answer = widget.answer;
 

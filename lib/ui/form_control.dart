@@ -19,37 +19,62 @@ Object? tryGetValue(String name, Object? value) {
 // [value] default value passed down by parent
 FormGroup elementsToFormGroup(
     BuildContext context, List<s.Elementbase> elements,
-    {Map<s.Elementbase, Object>? controlsMap,
+    {Map<s.Elementbase, AbstractControl<dynamic>>? controlsMap,
+    Map<s.Elementbase, AbstractControl<dynamic>>? commentsControlsMap,
     List<ValidatorFunction> validators = const [],
     List<AsyncValidatorFunction> asyncValidators = const [],
     Object? value}) {
-  final Map<String, Object> controls = <String, Object>{};
+  final Map<String, AbstractControl<dynamic>> controls =
+      <String, AbstractControl<dynamic>>{};
 
   for (var element in elements) {
     //the behavior of panel seems different from previous version --2023/04/26 Goxiaoy
     if (element.name != null && element is! s.Panel) {
-      final obj = toFormObject(context, element,
-          controlsMap: controlsMap, value: tryGetValue(element.name!, value));
-      controls[element.name!] = obj;
-      if (controlsMap != null) {
-        controlsMap[element] = obj;
+      final objs = toFormObjects(context, element,
+          controlsMap: controlsMap,
+          commentsControlsMap: commentsControlsMap,
+          value: tryGetValue(element.name!, value));
+      final mainObj = objs['main'];
+      final commentObj = objs['comment'];
+      if (mainObj != null) {
+        controls[element.name!] = mainObj;
+        if (controlsMap != null) {
+          controlsMap[element] = mainObj;
+        }
+      }
+      if (commentObj != null) {
+        controls['${element.name}-Comment'] = commentObj;
+        if (commentsControlsMap != null) {
+          commentsControlsMap[element] = commentObj;
+        }
       }
     } else {
       //patch parent
-      final obj = toFormObject(context, element,
-          controlsMap: controlsMap, value: value);
-      if (obj is FormGroup) {
-        controls.addAll(obj.controls);
+      final objs = toFormObjects(context, element,
+          controlsMap: controlsMap,
+          commentsControlsMap: commentsControlsMap,
+          value: value);
+      final mainObj = objs['main'];
+      final commentObj = objs['comment'];
+      if (mainObj is FormGroup) {
+        controls.addAll(mainObj.controls);
+      }
+      if (commentObj is FormGroup) {
+        controls.addAll(commentObj.controls);
       }
     }
   }
-  return fb.group(controls, validators, asyncValidators);
+  return FormGroup(controls,
+      validators: validators, asyncValidators: asyncValidators);
 }
 
 // toFormObject convert question json element to FromControl
 // [value] default value passed down by parent
-Object toFormObject(BuildContext context, s.Elementbase element,
-    {Map<s.Elementbase, Object>? controlsMap, Object? value}) {
+Map<String, AbstractControl<dynamic>> toFormObjects(
+    BuildContext context, s.Elementbase element,
+    {Map<s.Elementbase, AbstractControl<dynamic>>? controlsMap,
+    Map<s.Elementbase, AbstractControl<dynamic>>? commentsControlsMap,
+    Object? value}) {
   Object? getDefaultValue() {
     if (element is s.Question) {
       return element.defaultValue?.value ?? value;
@@ -57,64 +82,89 @@ Object toFormObject(BuildContext context, s.Elementbase element,
     return value;
   }
 
-  formFunc() {
+  Map<String, AbstractControl<dynamic>> formFunc() {
     if (element is s.Panel) {
-      return elementsToFormGroup(context,
-          element.elementsOrQuestions?.map((p) => p.realElement).toList() ?? [],
-          validators: element.isRequired == true ? [Validators.required] : [],
-          controlsMap: controlsMap,
-          value: value);
+      return {
+        'main': elementsToFormGroup(
+            context,
+            element.elementsOrQuestions?.map((p) => p.realElement).toList() ??
+                [],
+            validators: element.isRequired == true ? [Validators.required] : [],
+            controlsMap: controlsMap,
+            commentsControlsMap: commentsControlsMap,
+            value: value)
+      };
     }
     if (element is s.Paneldynamic) {
-      return alwaysUpdateArray(element.defaultValue.tryCastToListObj() ??
-          value.tryCastToList() ??
-          []);
+      return {
+        'main': alwaysUpdateArray<Map<String, Object?>>(
+            element.defaultValue.tryCastToListObj() ??
+                value.tryCastToList() ??
+                [])
+      };
     }
     if (element is s.Matrixdynamic) {
-      return alwaysUpdateArray(element.defaultValue.tryCastToListObj() ??
-          value.tryCastToList() ??
-          []);
+      return {
+        'main': alwaysUpdateArray<Map<String, Object?>>(
+            element.defaultValue.tryCastToListObj() ??
+                value.tryCastToList() ??
+                [])
+      };
     }
     if (element is s.Matrix) {
-      return fb.group(Map.fromEntries(
-          (element.rows?.map((p) => p.castToItemvalue()) ?? []).map((e) =>
-              MapEntry(
-                  e.value.toString(),
-                  fb.control<Object?>(
-                      tryGetValue(e.value.toString(), getDefaultValue()))))));
+      return {
+        'main': fb.group(Map.fromEntries(
+            (element.rows?.map((p) => p.castToItemvalue()) ?? []).map((e) =>
+                MapEntry(
+                    e.value.toString(),
+                    fb.control<Object?>(
+                        tryGetValue(e.value.toString(), getDefaultValue()))))))
+      };
     }
     if (element is s.Matrixdropdown) {
-      return fb.group(Map.fromEntries((element.rows
-                  ?.map((p) => p.castToItemvalue()) ??
-              [])
-          .map((e) => MapEntry(
-              e.value.toString(),
-              elementsToFormGroup(
-                  context,
-                  (element.columns?.toList() ?? [])
-                      .map((column) =>
-                          matrixDropdownColumnToQuestion(element, column))
-                      .toList(),
-                  value:
-                      tryGetValue(e.value.toString(), getDefaultValue()))))));
+      return {
+        'main': fb.group(Map.fromEntries(
+            (element.rows?.map((p) => p.castToItemvalue()) ?? []).map((e) =>
+                MapEntry(
+                    e.value.toString(),
+                    elementsToFormGroup(
+                        context,
+                        (element.columns?.toList() ?? [])
+                            .map((column) =>
+                                matrixDropdownColumnToQuestion(element, column))
+                            .toList(),
+                        value: tryGetValue(
+                            e.value.toString(), getDefaultValue()))))))
+      };
     }
     final validators = <ValidatorFunction>[];
     if (element is s.Question) {
       validators.addAll(questionToValidators(element));
     }
-    final c =
+    final elementFormControl =
         ((SurveyConfiguration.of(context)?.factory) ?? SurveyElementFactory())
             .resolveFormControl(element);
-    //find from facotry or fallback to FormControl<Object>
-    final res = c?.call(context, element,
+    final elementCommentFormControl =
+        ((SurveyConfiguration.of(context)?.factory) ?? SurveyElementFactory())
+            .resolveCommentFormControl(element);
+    //find from factory or fallback to FormControl<Object>
+    final resFormControl = elementFormControl?.call(context, element,
             validators: validators, value: value) ??
         FormControl<Object>(validators: validators, value: getDefaultValue());
-    return res;
+    final resCommentFormControl = elementCommentFormControl
+        ?.call(context, element, validators: validators, value: value);
+    return {
+      'main': resFormControl,
+      if (resCommentFormControl != null) 'comment': resCommentFormControl
+    };
   }
 
-  final obj = formFunc();
+  final Map<String, AbstractControl<dynamic>> obj = formFunc();
   if (controlsMap != null) {
-    controlsMap[element] = obj;
+    controlsMap[element] = obj['main']!;
+  }
+  if (commentsControlsMap != null && obj['comment'] != null) {
+    commentsControlsMap[element] = obj['comment']!;
   }
   return obj;
 }

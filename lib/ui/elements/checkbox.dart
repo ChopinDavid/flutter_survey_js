@@ -31,10 +31,15 @@ class ReactiveCheckBoxElement
           builder: (field) {
             final state = field as ReactiveFocusableFormFieldState;
             final BuildContext context = state.context;
-            final FormControl<Map<String, dynamic>> control =
+            final String checkboxName = element.name!;
+            final FormControl<List<String>> selectedChoicesListControl =
                 (ReactiveForm.of(context) as FormGroup).control(element.name!)
-                    as FormControl<Map<String, dynamic>>;
-            final Map<String, dynamic>? controlValue = control.value;
+                    as FormControl<List<String>>;
+            final FormControl commentControl =
+                (ReactiveForm.of(context) as FormGroup)
+                    .control('$checkboxName-Comment') as FormControl;
+            List<String> selectedChoicesList =
+                selectedChoicesListControl.value ?? [];
             final String selectAllText =
                 element.selectAllText ?? S.of(context).selectAllText;
             final String noneItemText =
@@ -43,29 +48,25 @@ class ReactiveCheckBoxElement
                 element.otherText ?? S.of(context).otherItemText;
             const String noneItemKey = 'none';
             const String otherItemKey = 'other';
-            List<String> choices = element.choices
+            List<String> choicesList = element.choices
                     ?.map((p0) => p0.castToItemvalue().value.toString())
                     .toList() ??
                 <String>[];
             if (element.showNoneItem ?? false) {
-              choices.add(noneItemKey);
+              choicesList.add(noneItemKey);
             }
             if (element.showOtherItem ?? false) {
-              choices.add(otherItemKey);
+              choicesList.add(otherItemKey);
             }
-            final String checkboxName = element.name!;
-            final List<String> selectedChoices =
-                controlValue?[checkboxName] as List<String>;
-            final String commentKey = '$checkboxName-Comment';
             List<String> choicesLessNone() =>
-                choices.where((element) => element != noneItemKey).toList();
+                choicesList.where((element) => element != noneItemKey).toList();
             List<String> choicesLessNoneAndOther() => choicesLessNone()
                 .where((element) => element != otherItemKey)
                 .toList();
 
             bool allSelected() => choicesLessNone()
                 .toSet()
-                .difference(selectedChoices.toSet())
+                .difference(selectedChoicesList.toSet())
                 .isEmpty;
 
             final widgetsList = <Widget>[];
@@ -78,39 +79,38 @@ class ReactiveCheckBoxElement
                   style: Theme.of(context).textTheme.bodyText2,
                 ),
                 onChanged: (_) {
-                  final Map<String, dynamic>? newControlValue = controlValue;
                   if (allSelected()) {
-                    newControlValue?.update(checkboxName, (_) => <String>[]);
-                    newControlValue?.remove(commentKey);
+                    selectedChoicesListControl.patchValue([]);
+                    commentControl.patchValue(null);
                   } else {
-                    newControlValue?.update(
-                        checkboxName, (_) => choicesLessNone());
-                    if (((element.showOtherItem ?? false) &&
-                        !(controlValue?.containsKey(commentKey) ?? true))) {
-                      newControlValue?[commentKey] = '';
+                    selectedChoicesList = choicesLessNone();
+                    selectedChoicesList
+                        .sort((a, b) => a == otherItemKey ? -1 : 1);
+                    selectedChoicesListControl.patchValue(selectedChoicesList);
+                    if (element.showOtherItem ?? false) {
+                      commentControl.patchValue('');
                     }
                   }
-                  control.patchValue(newControlValue);
                 },
               ));
             }
             for (String choiceText in choicesLessNoneAndOther()) {
               widgetsList.add(CheckboxListTile(
-                value: selectedChoices.contains(choiceText),
+                value: selectedChoicesList.contains(choiceText),
                 title: Text(
                   choiceText,
                   style: Theme.of(context).textTheme.bodyText2,
                 ),
                 onChanged: (v) {
-                  selectedChoices.remove(noneItemKey);
-                  if (selectedChoices.contains(choiceText)) {
-                    selectedChoices.remove(choiceText);
+                  selectedChoicesList.remove(noneItemKey);
+                  if (selectedChoicesList.contains(choiceText)) {
+                    selectedChoicesList.remove(choiceText);
                   } else {
-                    selectedChoices.add(choiceText);
+                    selectedChoicesList.add(choiceText);
+                    selectedChoicesList
+                        .sort((a, b) => a == otherItemKey ? -1 : 1);
                   }
-                  final Map<String, dynamic>? newControlValue = controlValue;
-                  newControlValue?.update(checkboxName, (_) => selectedChoices);
-                  control.patchValue(newControlValue);
+                  selectedChoicesListControl.patchValue(selectedChoicesList);
                 },
               ));
             }
@@ -118,45 +118,40 @@ class ReactiveCheckBoxElement
             if (element.showNoneItem ?? false) {
               widgetsList.add(
                 CheckboxListTile(
-                  value: selectedChoices.contains(noneItemKey),
+                  value: selectedChoicesList.contains(noneItemKey),
                   title: Text(noneItemText),
                   onChanged: (newBoolValue) {
-                    final Map<String, dynamic>? newControlValue = controlValue;
-                    if (selectedChoices.contains(noneItemKey)) {
-                      newControlValue?.update(checkboxName, (_) => <String>[]);
+                    if (selectedChoicesList.contains(noneItemKey)) {
+                      selectedChoicesListControl.patchValue([]);
                     } else {
-                      newControlValue?.update(
-                          checkboxName, (_) => [noneItemKey]);
-                      newControlValue?.remove(commentKey);
+                      selectedChoicesListControl.patchValue([noneItemKey]);
+                      commentControl.patchValue(null);
                     }
-
-                    control.patchValue(newControlValue);
                   },
                 ),
               );
             }
             // showOtherItem
             if (element.showOtherItem ?? false) {
-              String? text = element.otherText ?? S.of(context).otherItemText;
               widgetsList.add(CheckboxListTile(
-                value: selectedChoices.contains(otherItemKey),
-                title: Text(text),
-                onChanged: (v) {
-                  selectedChoices.remove(noneItemKey);
-                  final Map<String, dynamic>? newControlValue = controlValue;
-                  if (selectedChoices.contains(otherItemKey)) {
-                    selectedChoices.remove(otherItemKey);
-                    newControlValue?.remove(commentKey);
+                value: selectedChoicesList.contains(otherItemKey),
+                title: Text(otherItemText),
+                onChanged: (_) {
+                  var mutableSelectedChoicesList = selectedChoicesList.toList();
+                  mutableSelectedChoicesList.remove(noneItemKey);
+                  if (mutableSelectedChoicesList.contains(otherItemKey)) {
+                    mutableSelectedChoicesList.remove(otherItemKey);
+                    commentControl.patchValue(null);
                   } else {
-                    selectedChoices.add(otherItemKey);
-                    newControlValue?[commentKey] = '';
+                    mutableSelectedChoicesList.add(otherItemKey);
+                    commentControl.patchValue('');
                   }
-                  newControlValue?.update(checkboxName, (_) => selectedChoices);
-                  control.patchValue(newControlValue);
+                  selectedChoicesListControl
+                      .patchValue(mutableSelectedChoicesList);
                 },
               ));
             }
-            if (controlValue?.containsKey(commentKey) ?? false) {
+            if (commentControl.value != null) {
               widgetsList.add(TextFormField(
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
@@ -164,10 +159,9 @@ class ReactiveCheckBoxElement
                   border: const OutlineInputBorder(),
                   hintText: element.otherPlaceholder,
                 ),
-                initialValue: controlValue?[commentKey],
+                initialValue: commentControl.value as String,
                 onChanged: (value) {
-                  final Map<String, dynamic>? newControlValue = controlValue;
-                  newControlValue?[commentKey] = value;
+                  commentControl.patchValue(value);
                 },
               ));
             }

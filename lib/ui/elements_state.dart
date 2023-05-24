@@ -4,12 +4,22 @@ import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 @immutable
 class ElementsState {
   final Map<s.Elementbase, ElementStatus> _statusMap;
+  final Map<s.Elementbase, ElementStatus> _commentsStatusMap;
 
-  const ElementsState(Map<s.Elementbase, ElementStatus> status)
-      : _statusMap = status;
+  const ElementsState(
+    Map<s.Elementbase, ElementStatus> status,
+    Map<s.Elementbase, ElementStatus> commentsStatus,
+  )   : _statusMap = status,
+        _commentsStatusMap = commentsStatus;
 
-  ElementStatus? get(s.Elementbase element) {
-    return _statusMap[element];
+  Map<String, ElementStatus>? get(s.Elementbase element) {
+    final status = _statusMap[element];
+    final commentStatus = _commentsStatusMap[element];
+
+    return {
+      if (status != null) 'main': status,
+      if (commentStatus != null) 'comment': commentStatus
+    };
   }
 }
 
