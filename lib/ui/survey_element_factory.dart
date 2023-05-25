@@ -49,7 +49,13 @@ class SurveyElementFactory {
                     value.tryCastToList() ??
                     [],
                 validators: validators));
-    register<s.Radiogroup>(radioGroupBuilder);
+    register<s.Radiogroup>(radioGroupBuilder,
+        control: (context, element, {validators = const [], value}) =>
+            FormControl<String>(
+                value:
+                    (element as s.Radiogroup).defaultValue.tryCastToString() ??
+                        value.tryCastToString(),
+                validators: validators));
     register<s.Boolean>(booleanBuilder,
         control: (context, element, {validators = const [], value}) =>
             FormControl<bool>(

@@ -71,18 +71,24 @@ void main() {
           widgetTester.widget<ReactiveForm>(find.byType(ReactiveForm));
       expect(
           reactiveForm.formGroup.control(formControlName).value, defaultValue);
-      final radioListTileFinder = find.byType(RadioListTile);
-      final Iterable<RadioListTile> radioListTiles =
-          widgetTester.widgetList<RadioListTile>(radioListTileFinder);
-      final RadioListTile defaultValueRadioListTile =
+      final radioListTileFinder = find.byType(RadioListTile<int>);
+      final Iterable<RadioListTile<int>> radioListTiles =
+          widgetTester.widgetList<RadioListTile<int>>(radioListTileFinder);
+      final RadioListTile<int> defaultValueRadioListTile =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
         return radioListTileTitle is Text &&
             radioListTileTitle.data == defaultValue;
       }).single;
-      expect(defaultValueRadioListTile.selected, true);
 
-      final Iterable<RadioListTile> nonDefaultValueRadioListTiles =
+      expect(
+          (widgetTester.state(find.descendant(
+                  of: find.byWidget(defaultValueRadioListTile),
+                  matching: find.byType(Radio<int>))) as ToggleableStateMixin)
+              .value,
+          true);
+
+      final Iterable<RadioListTile<int>> nonDefaultValueRadioListTiles =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
         return radioListTileTitle is Text &&
@@ -115,37 +121,51 @@ void main() {
           ],
         },
       )!;
+      late BuildContext context;
       await widgetTester.pumpWidget(
         MaterialApp(
           localizationsDelegates: const [
             MultiAppLocalizationsDelegate(),
           ],
           home: Material(
-            child: SurveyWidget(survey: s),
+            child: Builder(builder: (_) {
+              context = _;
+              return SurveyWidget(survey: s);
+            }),
           ),
         ),
       );
       await widgetTester.pump();
       await widgetTester.idle();
 
+      final String otherItemText = S.of(context).otherItemText;
+
       final reactiveForm =
           widgetTester.widget<ReactiveForm>(find.byType(ReactiveForm));
       expect(
           reactiveForm.formGroup.control(formControlName).value, defaultValue);
-      final radioListTileFinder = find.byType(RadioListTile);
-      final Iterable<RadioListTile> radioListTiles =
-          widgetTester.widgetList<RadioListTile>(radioListTileFinder);
-      final RadioListTile otherRadioListTile =
+      final radioListTileFinder = find.byType(RadioListTile<int>);
+      final Iterable<RadioListTile<int>> radioListTiles =
+          widgetTester.widgetList<RadioListTile<int>>(radioListTileFinder);
+      final RadioListTile<int> otherRadioListTile =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
-        return radioListTileTitle is Text && radioListTileTitle.data == 'other';
+        return radioListTileTitle is Text &&
+            radioListTileTitle.data == otherItemText;
       }).single;
-      expect(otherRadioListTile.selected, true);
 
-      final Iterable<RadioListTile> nonOtherValueRadioListTiles =
+      expect(
+          (widgetTester.state(find.descendant(
+                  of: find.byWidget(otherRadioListTile),
+                  matching: find.byType(Radio<int>))) as ToggleableStateMixin)
+              .value,
+          true);
+
+      final Iterable<RadioListTile<int>> nonOtherValueRadioListTiles =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
-        return radioListTileTitle is Text && radioListTileTitle.data != 'other';
+        return radioListTileTitle is Text &&
+            radioListTileTitle.data != otherItemText;
       });
       for (var nonDefaultValueRadioListTile in nonOtherValueRadioListTiles) {
         expect(nonDefaultValueRadioListTile.selected, false);
@@ -195,20 +215,25 @@ void main() {
 
       final reactiveForm =
           widgetTester.widget<ReactiveForm>(find.byType(ReactiveForm));
-      expect(
-          reactiveForm.formGroup.control(formControlName).value, defaultValue);
-      final radioListTileFinder = find.byType(RadioListTile);
-      final Iterable<RadioListTile> radioListTiles =
-          widgetTester.widgetList<RadioListTile>(radioListTileFinder);
-      final RadioListTile defaultValueRadioListTile =
+      expect(reactiveForm.formGroup.control(formControlName).value,
+          defaultValue.toString());
+      final radioListTileFinder = find.byType(RadioListTile<int>);
+      final Iterable<RadioListTile<int>> radioListTiles =
+          widgetTester.widgetList<RadioListTile<int>>(radioListTileFinder);
+      final RadioListTile<int> defaultValueRadioListTile =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
         return radioListTileTitle is Text &&
             radioListTileTitle.data == defaultValue.toString();
       }).single;
-      expect(defaultValueRadioListTile.selected, true);
+      expect(
+          (widgetTester.state(find.descendant(
+                  of: find.byWidget(defaultValueRadioListTile),
+                  matching: find.byType(Radio<int>))) as ToggleableStateMixin)
+              .value,
+          true);
 
-      final Iterable<RadioListTile> nonDefaultValueRadioListTiles =
+      final Iterable<RadioListTile<int>> nonDefaultValueRadioListTiles =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
         return radioListTileTitle is Text &&
@@ -241,37 +266,50 @@ void main() {
           ],
         },
       )!;
+      late BuildContext context;
       await widgetTester.pumpWidget(
         MaterialApp(
           localizationsDelegates: const [
             MultiAppLocalizationsDelegate(),
           ],
           home: Material(
-            child: SurveyWidget(survey: s),
+            child: Builder(builder: (_) {
+              context = _;
+              return SurveyWidget(survey: s);
+            }),
           ),
         ),
       );
       await widgetTester.pump();
       await widgetTester.idle();
 
+      final String otherItemText = S.of(context).otherItemText;
+
       final reactiveForm =
           widgetTester.widget<ReactiveForm>(find.byType(ReactiveForm));
-      expect(
-          reactiveForm.formGroup.control(formControlName).value, defaultValue);
-      final radioListTileFinder = find.byType(RadioListTile);
-      final Iterable<RadioListTile> radioListTiles =
-          widgetTester.widgetList<RadioListTile>(radioListTileFinder);
-      final RadioListTile otherRadioListTile =
+      expect(reactiveForm.formGroup.control(formControlName).value,
+          defaultValue.toString());
+      final radioListTileFinder = find.byType(RadioListTile<int>);
+      final Iterable<RadioListTile<int>> radioListTiles =
+          widgetTester.widgetList<RadioListTile<int>>(radioListTileFinder);
+      final RadioListTile<int> otherRadioListTile =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
-        return radioListTileTitle is Text && radioListTileTitle.data == 'other';
+        return radioListTileTitle is Text &&
+            radioListTileTitle.data == otherItemText;
       }).single;
-      expect(otherRadioListTile.selected, true);
+      expect(
+          (widgetTester.state(find.descendant(
+                  of: find.byWidget(otherRadioListTile),
+                  matching: find.byType(Radio<int>))) as ToggleableStateMixin)
+              .value,
+          true);
 
-      final Iterable<RadioListTile> nonOtherValueRadioListTiles =
+      final Iterable<RadioListTile<int>> nonOtherValueRadioListTiles =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
-        return radioListTileTitle is Text && radioListTileTitle.data != 'other';
+        return radioListTileTitle is Text &&
+            radioListTileTitle.data != otherItemText;
       });
       for (var nonDefaultValueRadioListTile in nonOtherValueRadioListTiles) {
         expect(nonDefaultValueRadioListTile.selected, false);
@@ -291,7 +329,7 @@ void main() {
   });
 
   testWidgets(
-      'maps otherText to RadioListTile and displays ReactiveTextField when tapped. tapping other RadioListTiles hides ReactiveTextField.',
+      'maps otherText to RadioListTile<int> and displays ReactiveTextField when tapped. tapping other RadioListTiles hides ReactiveTextField.',
       (WidgetTester tester) async {
     const otherText = "Special Request";
 
@@ -326,15 +364,15 @@ void main() {
       ),
     );
 
-    final radioListTileFinder = find.byType(RadioListTile);
-    final Iterable<RadioListTile> radioListTiles =
-        tester.widgetList<RadioListTile>(radioListTileFinder);
-    final RadioListTile otherRadioListTile =
+    final radioListTileFinder = find.byType(RadioListTile<int>);
+    final Iterable<RadioListTile<int>> radioListTiles =
+        tester.widgetList<RadioListTile<int>>(radioListTileFinder);
+    final RadioListTile<int> otherRadioListTile =
         radioListTiles.where((radioListTile) {
       final radioListTileTitle = radioListTile.title;
       return radioListTileTitle is Text && radioListTileTitle.data == otherText;
     }).single;
-    final Iterable<RadioListTile> nonOtherValueRadioListTiles =
+    final Iterable<RadioListTile<int>> nonOtherValueRadioListTiles =
         radioListTiles.where((radioListTile) {
       final radioListTileTitle = radioListTile.title;
       return radioListTileTitle is Text && radioListTileTitle.data != otherText;
@@ -347,7 +385,8 @@ void main() {
     expect(find.byType(ReactiveTextField), findsOneWidget);
 
     for (var nonOtherValueRadioListTile in nonOtherValueRadioListTiles) {
-      await tester.tap(find.byWidget(nonOtherValueRadioListTile));
+      await tester
+          .tap(find.byWidget(nonOtherValueRadioListTile, skipOffstage: false));
       await tester.pump();
       await tester.idle();
 
@@ -392,10 +431,10 @@ void main() {
       ),
     );
 
-    final radioListTileFinder = find.byType(RadioListTile);
-    final Iterable<RadioListTile> radioListTiles =
-        tester.widgetList<RadioListTile>(radioListTileFinder);
-    final RadioListTile otherRadioListTile =
+    final radioListTileFinder = find.byType(RadioListTile<int>);
+    final Iterable<RadioListTile<int>> radioListTiles =
+        tester.widgetList<RadioListTile<int>>(radioListTileFinder);
+    final RadioListTile<int> otherRadioListTile =
         radioListTiles.where((radioListTile) {
       final radioListTileTitle = radioListTile.title;
       return radioListTileTitle is Text && radioListTileTitle.data == otherText;
@@ -464,7 +503,7 @@ void main() {
               survey: surveyFromJson(const {
             "questions": [
               {
-                "type": "radioGroup",
+                "type": "radiogroup",
                 "name": questionName,
                 "isRequired": true,
                 "choices": [
@@ -508,7 +547,7 @@ void main() {
                 survey: surveyFromJson(const {
                   "questions": [
                     {
-                      "type": "radioGroup",
+                      "type": "radiogroup",
                       "name": questionName,
                       "isRequired": true,
                       "choices": [
@@ -527,23 +566,28 @@ void main() {
       await tester.pump();
       await tester.idle();
 
-      final radioListTileFinder = find.byType(RadioListTile);
-      final Iterable<RadioListTile> radioListTiles =
-          tester.widgetList<RadioListTile>(radioListTileFinder);
-      final RadioListTile existingAnswerRadioListTile =
+      final radioListTileFinder = find.byType(RadioListTile<int>);
+      final Iterable<RadioListTile<int>> radioListTiles =
+          tester.widgetList<RadioListTile<int>>(radioListTileFinder);
+      final RadioListTile<int> existingAnswerRadioListTile =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
         return radioListTileTitle is Text &&
             radioListTileTitle.data == existingAnswer;
       }).single;
-      final Iterable<RadioListTile> nonExistingAnswerRadioListTiles =
+      final Iterable<RadioListTile<int>> nonExistingAnswerRadioListTiles =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
         return radioListTileTitle is Text &&
             radioListTileTitle.data != existingAnswer;
       });
 
-      expect(existingAnswerRadioListTile.selected, true);
+      expect(
+          (tester.state(find.descendant(
+                  of: find.byWidget(existingAnswerRadioListTile),
+                  matching: find.byType(Radio<int>))) as ToggleableStateMixin)
+              .value,
+          true);
 
       for (var nonExistingAnswerRadioListTile
           in nonExistingAnswerRadioListTiles) {
@@ -570,7 +614,7 @@ void main() {
                 survey: surveyFromJson(const {
                   "questions": [
                     {
-                      "type": "radioGroup",
+                      "type": "radiogroup",
                       "name": questionName,
                       "isRequired": true,
                       "choices": [5, 6, 7, 8, 9, 10, 11, existingAnswer, 13],
@@ -584,23 +628,28 @@ void main() {
       await tester.pump();
       await tester.idle();
 
-      final radioListTileFinder = find.byType(RadioListTile);
-      final Iterable<RadioListTile> radioListTiles =
-          tester.widgetList<RadioListTile>(radioListTileFinder);
-      final RadioListTile existingAnswerRadioListTile =
+      final radioListTileFinder = find.byType(RadioListTile<int>);
+      final Iterable<RadioListTile<int>> radioListTiles =
+          tester.widgetList<RadioListTile<int>>(radioListTileFinder);
+      final RadioListTile<int> existingAnswerRadioListTile =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
         return radioListTileTitle is Text &&
             radioListTileTitle.data == existingAnswer.toString();
       }).single;
-      final Iterable<RadioListTile> nonExistingAnswerRadioListTiles =
+      final Iterable<RadioListTile<int>> nonExistingAnswerRadioListTiles =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
         return radioListTileTitle is Text &&
             radioListTileTitle.data != existingAnswer.toString();
       });
 
-      expect(existingAnswerRadioListTile.selected, true);
+      expect(
+          (tester.state(find.descendant(
+                  of: find.byWidget(existingAnswerRadioListTile),
+                  matching: find.byType(Radio<int>))) as ToggleableStateMixin)
+              .value,
+          true);
 
       for (var nonExistingAnswerRadioListTile
           in nonExistingAnswerRadioListTiles) {
@@ -614,6 +663,7 @@ void main() {
       const questionName = "What t-shirt size do you want?";
       const existingAnswer = "XS";
 
+      late BuildContext context;
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: const [
@@ -623,24 +673,27 @@ void main() {
             GlobalCupertinoLocalizations.delegate,
           ],
           home: Material(
-            child: SurveyWidget(
-                answer: const {questionName: existingAnswer},
-                survey: surveyFromJson(const {
-                  "questions": [
-                    {
-                      "type": "radioGroup",
-                      "name": questionName,
-                      "isRequired": true,
-                      "choices": [
-                        "S",
-                        "M",
-                        "L",
-                        "XL",
-                      ],
-                      "showOtherItem": true,
-                    }
-                  ]
-                })!),
+            child: Builder(builder: (_) {
+              context = _;
+              return SurveyWidget(
+                  answer: const {questionName: existingAnswer},
+                  survey: surveyFromJson(const {
+                    "questions": [
+                      {
+                        "type": "radiogroup",
+                        "name": questionName,
+                        "isRequired": true,
+                        "choices": [
+                          "S",
+                          "M",
+                          "L",
+                          "XL",
+                        ],
+                        "showOtherItem": true,
+                      }
+                    ]
+                  })!);
+            }),
           ),
         ),
       );
@@ -648,15 +701,18 @@ void main() {
       await tester.pump();
       await tester.idle();
 
-      final radioListTileFinder = find.byType(RadioListTile);
-      final Iterable<RadioListTile> radioListTiles =
-          tester.widgetList<RadioListTile>(radioListTileFinder);
-      final RadioListTile otherRadioListTile =
+      final String otherItemText = S.of(context).otherItemText;
+
+      final radioListTileFinder = find.byType(RadioListTile<int>);
+      final Iterable<RadioListTile<int>> radioListTiles =
+          tester.widgetList<RadioListTile<int>>(radioListTileFinder);
+      final RadioListTile<int> otherRadioListTile =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
-        return radioListTileTitle is Text && radioListTileTitle.data == 'other';
+        return radioListTileTitle is Text &&
+            radioListTileTitle.data == otherItemText;
       }).single;
-      final Iterable<RadioListTile> nonOtherRadioListTiles =
+      final Iterable<RadioListTile<int>> nonOtherRadioListTiles =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
         return radioListTileTitle is Text &&
@@ -687,6 +743,7 @@ void main() {
       const questionName = "What shoe size do you wear?";
       const existingAnswer = 14;
 
+      late BuildContext context;
       await tester.pumpWidget(
         MaterialApp(
           localizationsDelegates: const [
@@ -696,19 +753,22 @@ void main() {
             GlobalCupertinoLocalizations.delegate,
           ],
           home: Material(
-            child: SurveyWidget(
-                answer: const {questionName: existingAnswer},
-                survey: surveyFromJson(const {
-                  "questions": [
-                    {
-                      "type": "radioGroup",
-                      "name": questionName,
-                      "isRequired": true,
-                      "choices": [5, 6, 7, 8, 9, 10, 11, 12, 13],
-                      "showOtherItem": true,
-                    }
-                  ]
-                })!),
+            child: Builder(builder: (_) {
+              context = _;
+              return SurveyWidget(
+                  answer: const {questionName: existingAnswer},
+                  survey: surveyFromJson(const {
+                    "questions": [
+                      {
+                        "type": "radiogroup",
+                        "name": questionName,
+                        "isRequired": true,
+                        "choices": [5, 6, 7, 8, 9, 10, 11, 12, 13],
+                        "showOtherItem": true,
+                      }
+                    ]
+                  })!);
+            }),
           ),
         ),
       );
@@ -716,15 +776,18 @@ void main() {
       await tester.pump();
       await tester.idle();
 
-      final radioListTileFinder = find.byType(RadioListTile);
-      final Iterable<RadioListTile> radioListTiles =
-          tester.widgetList<RadioListTile>(radioListTileFinder);
-      final RadioListTile otherRadioListTile =
+      final String otherItemText = S.of(context).otherItemText;
+
+      final radioListTileFinder = find.byType(RadioListTile<int>);
+      final Iterable<RadioListTile<int>> radioListTiles =
+          tester.widgetList<RadioListTile<int>>(radioListTileFinder);
+      final RadioListTile<int> otherRadioListTile =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
-        return radioListTileTitle is Text && radioListTileTitle.data == 'other';
+        return radioListTileTitle is Text &&
+            radioListTileTitle.data == otherItemText;
       }).single;
-      final Iterable<RadioListTile> nonOtherRadioListTiles =
+      final Iterable<RadioListTile<int>> nonOtherRadioListTiles =
           radioListTiles.where((radioListTile) {
         final radioListTileTitle = radioListTile.title;
         return radioListTileTitle is Text &&

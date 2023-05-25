@@ -7,6 +7,8 @@ import 'package:flutter_survey_js_model/utils.dart';
 import 'package:group_button/group_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../generated/l10n.dart';
+
 Widget radioGroupBuilder(context, element,
     {ElementConfiguration? configuration}) {
   final e = element as s.Radiogroup;
@@ -38,9 +40,13 @@ class _RadioGroupWithOtherOptionState
     if (controlValue == null) {
       return false;
     }
-    final choiceMatch = widget.radiogroup.choices
+    List<String>? choiceMatch = widget.radiogroup.choices
         ?.map((e) => e.castToItemvalue().value?.value.toString())
-        .toList();
+        .toList()
+        .cast();
+    if (widget.radiogroup.showNoneItem ?? false) {
+      choiceMatch?.add('none');
+    }
     return !(choiceMatch!.contains(controlValue is JsonObject
         ? controlValue.tryCastToString()
         : controlValue.toString()));
@@ -52,14 +58,14 @@ class _RadioGroupWithOtherOptionState
   Widget build(BuildContext context) {
     var e = widget.radiogroup;
 
-    final radioTexts = <s.SelectbaseAllOfChoicesInner>[
-      ...?e.choices,
-      if (e.showNoneItem == true)
-        surveySerializers.deserializeWith(
-            s.SelectbaseAllOfChoicesInner.serializer, {'value': 'none'})!,
-      if (e.showOtherItem == true)
-        surveySerializers.deserializeWith(
-            s.SelectbaseAllOfChoicesInner.serializer, {'value': 'other'})!,
+    final radioTexts = <String>[
+      ...e.choices?.map((choice) {
+            final itemValue = choice.castToItemvalue();
+            return itemValue.text ?? itemValue.value?.toString() ?? '';
+          }).toList() ??
+          [],
+      if (e.showNoneItem == true) 'none',
+      if (e.showOtherItem == true) 'other',
     ];
 
     return Column(
@@ -71,7 +77,6 @@ class _RadioGroupWithOtherOptionState
             radiogroup: widget.radiogroup,
             onChanged: (control) {
               setState(() {
-                print(control.value);
                 if (control.value != 'other') {
                   showOtherTextField = false;
                 }
@@ -80,29 +85,29 @@ class _RadioGroupWithOtherOptionState
           ),
         if (!showOtherTextField)
           ReactiveGroupButton(
-            options: const GroupButtonOptions(spacing: 0, runSpacing: 0),
-            isRadio: true,
-            formControlName: e.name!,
-            buttons: (e.choices?.toList() ?? []),
-            onChanged: (control) {
-              setState(() {
-                if (control.value == 'other') {
-                  control.value = '';
-                  control.markAsUntouched();
-                  control.markAsPristine();
-                  showOtherTextField = true;
-                  return;
-                }
-                List<Object> choices = (e.choices?.toList() ?? [])
-                    .map((e) => e.castToItemvalue().value!.value)
-                    .toList();
-                if (e.showNoneItem == true) {
-                  choices.add('none');
-                }
-                showOtherTextField = !choices.contains(control.value);
-              });
-            },
-          ).wrapQuestionTitle(context, e, configuration: widget.configuration),
+              options: const GroupButtonOptions(spacing: 0, runSpacing: 0),
+              radiogroup: widget.radiogroup,
+              isRadio: true,
+              formControlName: e.name!,
+              buttons: radioTexts,
+              onChanged: (control) {
+                setState(() {
+                  if (control.value == 'other') {
+                    control.value = '';
+                    control.markAsUntouched();
+                    control.markAsPristine();
+                    showOtherTextField = true;
+                    return;
+                  }
+                  List<Object> choices = (e.choices?.toList() ?? [])
+                      .map((e) => e.castToItemvalue().value!.value.toString())
+                      .toList();
+                  if (e.showNoneItem == true) {
+                    choices.add('none');
+                  }
+                  showOtherTextField = !choices.contains(control.value);
+                });
+              }),
         if (showOtherTextField)
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
@@ -137,7 +142,7 @@ class _NonReactiveReactiveGroupButton extends StatelessWidget {
     required this.radiogroup,
   }) : super(key: key);
   final String formControlName;
-  final List<s.SelectbaseAllOfChoicesInner> items;
+  final List<String> items;
   final ReactiveFormFieldCallback<dynamic>? onChanged;
   final s.Radiogroup radiogroup;
 
@@ -148,26 +153,42 @@ class _NonReactiveReactiveGroupButton extends StatelessWidget {
     );
 
     return InputDecorator(
-        decoration: effectiveDecoration,
-        child: GroupButton<s.SelectbaseAllOfChoicesInner>(
-          buttons: items,
-          isRadio: true,
-          buttonIndexedBuilder: (
-            bool selected,
-            int index,
-            BuildContext context,
-          ) {
-            final choice = items[index];
-            final itemValue = choice.castToItemvalue();
-            final title = itemValue.text ?? itemValue.value?.toString() ?? '';
-            return RadioListTile<int>(
-              title: Text(title),
-              groupValue: items.length - 1,
-              value: index,
-              contentPadding: const EdgeInsets.only(left: 8.0, right: 16.0),
-              onChanged: (_) {},
-            );
-          },
-        ));
+      decoration: effectiveDecoration,
+      child: GroupButton<String>(
+        options: const GroupButtonOptions(spacing: 0, runSpacing: 0),
+        buttons: items,
+        isRadio: true,
+        buttonIndexedBuilder: (
+          bool selected,
+          int index,
+          BuildContext context,
+        ) {
+          final choice = items[index];
+          final text;
+          if (choice == 'other') {
+            text = radiogroup.otherText ?? S.of(context).otherItemText;
+          } else if (choice == 'none') {
+            text = radiogroup.otherText ?? S.of(context).noneItemText;
+          } else {
+            text = choice;
+          }
+          return RadioListTile<int>(
+            title: Text(text),
+            groupValue: items.length - 1,
+            value: index,
+            contentPadding: const EdgeInsets.only(left: 8.0, right: 16.0),
+            onChanged: (index) {
+              if (index == null) {
+                return;
+              }
+              final formControl = (ReactiveForm.of(context) as FormGroup)
+                  .control(radiogroup.name!) as FormControl;
+              formControl.updateValue(items[index]);
+              onChanged?.call(formControl);
+            },
+          );
+        },
+      ),
+    );
   }
 }

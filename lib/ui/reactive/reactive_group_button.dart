@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:group_button/group_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../generated/l10n.dart';
+import '../../survey.dart' hide Text;
+
 // ReactiveGroupButton Wrapper around group_button to use with reactive_forms
 class ReactiveGroupButton extends ReactiveFocusableFormField<dynamic, dynamic> {
-  final GroupButtonController? _controller;
-  final List<s.SelectbaseAllOfChoicesInner> _buttons;
+  final Radiogroup radiogroup;
 
   ReactiveGroupButton({
     Key? key,
@@ -14,7 +15,8 @@ class ReactiveGroupButton extends ReactiveFocusableFormField<dynamic, dynamic> {
     FormControl<dynamic>? formControl,
     Map<String, ValidationMessageFunction>? validationMessages,
     InputDecoration? decoration,
-    required List<s.SelectbaseAllOfChoicesInner> buttons,
+    required List<String> buttons,
+    required this.radiogroup,
     GroupButtonController? controller,
     GroupButtonOptions options = const GroupButtonOptions(),
     bool isRadio = true,
@@ -22,91 +24,61 @@ class ReactiveGroupButton extends ReactiveFocusableFormField<dynamic, dynamic> {
     int? maxSelected,
     FocusNode? focusNode,
     ReactiveFormFieldCallback<dynamic>? onChanged,
-  })  : _controller = controller,
-        _buttons = buttons,
-        super(
+  }) : super(
             key: key,
             formControl: formControl,
             formControlName: formControlName,
             validationMessages: validationMessages,
             focusNode: focusNode,
             builder: (field) {
-              final state = field as _ReactiveGroupButtonState<dynamic>;
+              final state = field as ReactiveFocusableFormFieldState;
               final InputDecoration effectiveDecoration = (decoration ??
                       const InputDecoration())
                   .applyDefaults(Theme.of(state.context).inputDecorationTheme);
               return InputDecorator(
-                  decoration: effectiveDecoration.copyWith(
-                    errorText: field.errorText,
-                    enabled: field.control.enabled,
-                  ),
-                  child: GroupButton<s.SelectbaseAllOfChoicesInner>(
-                    buttons: buttons,
-                    options: options,
-                    isRadio: isRadio,
-                    controller: state._controller,
-                    buttonIndexedBuilder: (
-                      bool selected,
-                      int index,
-                      BuildContext context,
-                    ) {
-                      final choice = buttons[index];
-                      final itemValue = choice.castToItemvalue();
-                      final title =
-                          itemValue.text ?? itemValue.value?.toString() ?? '';
-                      return RadioListTile<int>(
-                        title: Text(title),
-                        groupValue: state._controller.selectedIndex,
-                        value: index,
-                        contentPadding:
-                            const EdgeInsets.only(left: 8.0, right: 16.0),
-                        onChanged: (_) {
-                          if (!selected) {
-                            state._controller.selectIndex(index);
-                          } else {
-                            state._controller.unselectIndex(index);
-                          }
-                          if (field.control.enabled) {
-                            if (!selected) {
-                              field.didChange(itemValue.value?.value);
-                            } else {
-                              field.didChange(null);
-                            }
-                            onChanged?.call(field.control);
-                          }
-                        },
-                      );
-                    },
-                    enableDeselect: enableDeselect,
-                    maxSelected: maxSelected,
-                  ));
+                decoration: effectiveDecoration.copyWith(
+                  errorText: field.errorText,
+                  enabled: field.control.enabled,
+                ),
+                child: GroupButton<String>(
+                  buttons: buttons,
+                  options: options,
+                  isRadio: isRadio,
+                  buttonIndexedBuilder: (
+                    bool selected,
+                    int index,
+                    BuildContext context,
+                  ) {
+                    final choice = buttons[index];
+                    final String text;
+                    if (choice == 'other') {
+                      text =
+                          radiogroup.otherText ?? S.of(context).otherItemText;
+                    } else if (choice == 'none') {
+                      text = radiogroup.otherText ?? S.of(context).noneItemText;
+                    } else {
+                      text = choice;
+                    }
+                    final formControl = (ReactiveForm.of(context) as FormGroup)
+                        .control(radiogroup.name!) as FormControl;
+                    final formControlValue = formControl.value;
+                    return RadioListTile<int>(
+                      title: Text(text),
+                      groupValue: formControlValue == null
+                          ? null
+                          : buttons.indexOf(formControlValue.toString()),
+                      value: index,
+                      contentPadding:
+                          const EdgeInsets.only(left: 8.0, right: 16.0),
+                      onChanged: (_) {
+                        formControl.updateValue(choice);
+                        onChanged?.call(formControl);
+                      },
+                    );
+                  },
+                  enableDeselect: enableDeselect,
+                  maxSelected: maxSelected,
+                ),
+              );
             });
-
-  @override
-  ReactiveFormFieldState<dynamic, dynamic> createState() =>
-      _ReactiveGroupButtonState<dynamic>();
-}
-
-class _ReactiveGroupButtonState<T>
-    extends ReactiveFocusableFormFieldState<T, T> {
-  late GroupButtonController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeController();
-  }
-
-  void _initializeController() {
-    final initialValue = value;
-    final currentWidget = widget as ReactiveGroupButton;
-    _controller = (currentWidget._controller != null)
-        ? currentWidget._controller!
-        : GroupButtonController();
-    final index = currentWidget._buttons.indexWhere(
-        (element) => element.castToItemvalue().value?.value == initialValue);
-    if (index != -1) {
-      _controller.selectIndex(index);
-    }
-  }
 }
