@@ -37,16 +37,18 @@ class SurveyElementFactory {
     register<s.Checkbox>(checkBoxBuilder,
         control: (context, element, {validators = const [], value}) {
       var value = <String, dynamic>{};
-      value[element.name!] = <String>[];
       final s.Checkbox checkbox = element as s.Checkbox;
       checkbox.choices?.forEach((choice) {
         //TODO: set to defaultValue and default to false
+        value[choice.castToItemvalue().value.toString()] = false;
       });
       if (checkbox.showNoneItem ?? false) {
         //TODO: set to defaultValue and default to false
+        value['none'] = false;
       }
       if (checkbox.showOtherItem ?? false) {
         //TODO: set to defaultValue and default to null
+        value['other'] = null;
       }
       return FormControl<Map<String, dynamic>>(value: value);
     });
