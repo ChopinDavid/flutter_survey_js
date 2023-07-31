@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_survey_js/data/condition/visibility_helper.dart';
 import 'package:flutter_survey_js/ui/elements/boolean.dart';
 import 'package:flutter_survey_js/ui/elements/comment.dart';
 import 'package:flutter_survey_js/ui/elements/matrix_dropdown.dart';
 import 'package:flutter_survey_js/ui/elements/panel.dart';
-import 'package:flutter_survey_js/ui/reactive/always_update_form_array.dart';
 import 'package:flutter_survey_js/ui/reactive/reactive.dart';
 import 'package:flutter_survey_js/ui/reactive/reactive_signature_string.dart';
 import 'package:flutter_survey_js/ui/survey_configuration.dart';
+import 'package:flutter_survey_js/ui/survey_widget.dart';
 import 'package:flutter_survey_js/ui/validators.dart';
 import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
@@ -183,8 +184,15 @@ class SurveyElementFactory {
   }
 
   // resolve resolve widet from element
-  Widget resolve(BuildContext context, s.Elementbase element,
+  Widget? resolve(BuildContext context, s.Elementbase element,
       {ElementConfiguration? configuration}) {
+    if (element is s.Question) {
+      if (!VisibilityHelper().isElementVisible(
+          element: element,
+          surveyResponse: SurveyProvider.of(context).formGroup.value)) {
+        return null;
+      }
+    }
     var res = _map[element.type];
     if (res == null) {
       //unsupported element

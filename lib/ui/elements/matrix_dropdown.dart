@@ -56,34 +56,41 @@ class MatrixDropdownElement extends StatelessWidget {
                 TableCell(
                     verticalAlignment: TableCellVerticalAlignment.middle,
                     child: Text(row.castToItemvalue().text ?? "")),
-                ...(matrix.columns?.toList() ?? []).map((column) {
-                  final q = matrixDropdownColumnToQuestion(matrix, column);
-                  final v = questionToValidators(q);
+                ...(matrix.columns?.toList() ?? [])
+                    .map((column) {
+                      final q = matrixDropdownColumnToQuestion(matrix, column);
+                      final v = questionToValidators(q);
+                      final element = SurveyConfiguration.of(context)!
+                          .factory
+                          .resolve(context, q,
+                              configuration:
+                                  const ElementConfiguration(hasTitle: false));
 
-                  return TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: ReactiveNestedForm(
-                        formControlName:
-                            row.castToItemvalue().value!.toString(),
-                        child: Builder(
-                          builder: (context) {
-                            final fg = ReactiveForm.of(context) as FormGroup;
-                            final c = fg.control(column.name!);
-                            //TODO runner
-                            // //concat validators
-                            // final newV = HashSet<ValidatorFunction>.of(
-                            //     [...c.validators, ...v]).toList();
-                            c.setValidators(v);
-                            return SurveyConfiguration.of(context)!
-                                .factory
-                                .resolve(
-                                    context, q,
-                                    configuration: const ElementConfiguration(
-                                        hasTitle: false));
-                          },
-                        ),
-                      ));
-                }).toList()
+                      return element == null
+                          ? null
+                          : TableCell(
+                              verticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              child: ReactiveNestedForm(
+                                formControlName:
+                                    row.castToItemvalue().value!.toString(),
+                                child: Builder(
+                                  builder: (context) {
+                                    final fg =
+                                        ReactiveForm.of(context) as FormGroup;
+                                    final c = fg.control(column.name!);
+                                    //TODO runner
+                                    // //concat validators
+                                    // final newV = HashSet<ValidatorFunction>.of(
+                                    //     [...c.validators, ...v]).toList();
+                                    c.setValidators(v);
+                                    return element;
+                                  },
+                                ),
+                              ));
+                    })
+                    .toList()
+                    .removeWhere((element) => element == null) as List<Widget>
               ]));
         });
 

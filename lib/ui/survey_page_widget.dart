@@ -1,10 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_survey_js/ui/survey_configuration.dart';
+import 'package:flutter_survey_js/data/condition/visibility_helper.dart';
 import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
+import '../survey.dart';
 import 'panel_title.dart';
 
 class SurveyPageWidget extends StatefulWidget {
@@ -134,21 +135,38 @@ class SurveyPageWidgetState extends State<SurveyPageWidget> {
                     itemBuilder: (context, index) {
                       if (index < widget.page.elementsOrQuestions!.length &&
                           index >= 0) {
-                        return SurveyConfiguration.of(context)!.factory.resolve(
-                            context,
-                            widget
-                                .page.elementsOrQuestions![index].realElement);
+                        final surveyElement = SurveyConfiguration.of(context)!
+                            .factory
+                            .resolve(
+                                context,
+                                widget.page.elementsOrQuestions![index]
+                                    .realElement);
+                        return surveyElement ??
+                            Container(
+                              width: double.infinity,
+                            );
                       } else {
                         return Container(
                           width: double.infinity,
-                          // child: Image.asset(
-                          //   'assets/images/decision.jpg',
-                          //   fit: BoxFit.fill,
-                          // ),
                         );
                       }
                     },
                     separatorBuilder: (BuildContext context, int index) {
+                      final SurveyQuestionsInner element =
+                          widget.page.elements![index];
+                      if (element is s.Question) {
+                        if (VisibilityHelper().isElementVisible(
+                            element: element as s.Question,
+                            surveyResponse:
+                                SurveyProvider.of(context).formGroup.value)) {
+                          return SurveyConfiguration.of(context)!
+                              .separatorBuilder(context);
+                        } else {
+                          return Container(
+                            width: double.infinity,
+                          );
+                        }
+                      }
                       return SurveyConfiguration.of(context)!
                           .separatorBuilder(context);
                     },

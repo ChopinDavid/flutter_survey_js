@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_survey_js/generated/l10n.dart';
 import 'package:flutter_survey_js/ui/custom_scroll_behavior.dart';
-import 'package:flutter_survey_js/ui/reactive/reactive_wrap_form_array.dart';
-import 'package:flutter_survey_js/ui/survey_configuration.dart';
-import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:flutter_survey_js/ui/form_control.dart';
 import 'package:flutter_survey_js/ui/reactive/reactive_nested_form.dart';
+import 'package:flutter_survey_js/ui/reactive/reactive_wrap_form_array.dart';
+import 'package:flutter_survey_js/ui/survey_configuration.dart';
 import 'package:flutter_survey_js/ui/validators.dart';
+import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'matrix_dropdown_base.dart';
@@ -89,33 +89,40 @@ class MatrixDynamicElement extends StatelessWidget {
                     )
                   : null,
               children: [
-                ...(matrix.columns?.toList() ?? []).map((column) {
-                  final q = matrixDropdownColumnToQuestion(matrix, column);
-                  final v = questionToValidators(q);
+                ...(matrix.columns?.toList() ?? [])
+                    .map((column) {
+                      final q = matrixDropdownColumnToQuestion(matrix, column);
+                      final v = questionToValidators(q);
+                      final element = SurveyConfiguration.of(context)!
+                          .factory
+                          .resolve(context, q,
+                              configuration:
+                                  const ElementConfiguration(hasTitle: false));
 
-                  return TableCell(
-                      verticalAlignment: TableCellVerticalAlignment.middle,
-                      child: ReactiveNestedForm(
-                        formGroup: c,
-                        child: Builder(
-                          builder: (context) {
-                            final fg = ReactiveForm.of(context) as FormGroup;
-                            final c = fg.control(column.name!);
-                            //concat validators
-                            // final newV = HashSet<ValidatorFunction>.of(
-                            //     [...c.validators, ...v]).toList();
-                            //TODO runner
-                            c.setValidators(v);
-                            return SurveyConfiguration.of(context)!
-                                .factory
-                                .resolve(
-                                    context, q,
-                                    configuration: const ElementConfiguration(
-                                        hasTitle: false));
-                          },
-                        ),
-                      ));
-                }).toList(),
+                      return element == null
+                          ? null
+                          : TableCell(
+                              verticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              child: ReactiveNestedForm(
+                                formGroup: c,
+                                child: Builder(
+                                  builder: (context) {
+                                    final fg =
+                                        ReactiveForm.of(context) as FormGroup;
+                                    final c = fg.control(column.name!);
+                                    //concat validators
+                                    // final newV = HashSet<ValidatorFunction>.of(
+                                    //     [...c.validators, ...v]).toList();
+                                    //TODO runner
+                                    c.setValidators(v);
+                                    return element;
+                                  },
+                                ),
+                              ));
+                    })
+                    .toList()
+                    .removeWhere((element) => element == null) as List<Widget>,
                 TableCell(
                   child: SizedBox(
                       child: Padding(
