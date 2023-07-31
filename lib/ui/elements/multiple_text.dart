@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_survey_js/ui/form_control.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_survey_js/ui/reactive/reactive_nested_form.dart';
 import 'package:flutter_survey_js/ui/survey_configuration.dart';
 import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:async/async.dart';
 
 Widget multipleTextBuilder(BuildContext context, s.Elementbase element,
     {ElementConfiguration? configuration}) {
@@ -19,8 +19,7 @@ Widget multipleTextBuilder(BuildContext context, s.Elementbase element,
         final effectiveDecoration = const InputDecoration()
             .applyDefaults(Theme.of(context).inputDecorationTheme);
         return StreamBuilder(
-          stream:
-              StreamGroup.merge([control.touchChanges, control.statusChanged]),
+          stream: StreamGroup.merge([control.touchChanges]),
           builder: (context, _) {
             return InputDecorator(
               decoration: effectiveDecoration.copyWith(
