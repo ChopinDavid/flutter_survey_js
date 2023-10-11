@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_survey_js/generated/l10n.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:flutter_survey_js/utils.dart';
+import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
+import 'package:reactive_forms/reactive_forms.dart';
 
 const otherValue = "other";
 const noneValue = "none";
@@ -97,7 +97,7 @@ class SelectbaseController extends ChangeNotifier {
 
   bool get storeOtherAsComment => !showCommentArea;
 
-  late FormGroup _fg;
+  FormGroup? _fg;
 
   final TextEditingController _otherTextController = TextEditingController();
 
@@ -111,7 +111,7 @@ class SelectbaseController extends ChangeNotifier {
     if (storeOtherAsComment) {
       if (!showOther) {
         final name = getCommentName();
-        _fg.control(name).value = "";
+        _fg?.control(name).value = "";
       }
     }
     notifyListeners();
@@ -126,13 +126,13 @@ class SelectbaseController extends ChangeNotifier {
       _otherTextController.text = value;
     } else {
       final name = getCommentName();
-      _fg.control(name).value = value;
+      _fg?.control(name).value = value;
     }
   }
 
   String? getOtherValue() {
     final name = getCommentName();
-    return _fg.contains(name) ? _fg.control(name).value : null;
+    return (_fg?.contains(name) ?? false) ? _fg?.control(name).value : null;
   }
 
   String getCommentName() {
