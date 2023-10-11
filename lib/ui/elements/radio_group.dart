@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_survey_js/ui/elements/selectbase.dart';
+import 'package:flutter_survey_js/ui/reactive/reactive_group_button.dart';
 import 'package:flutter_survey_js/ui/survey_configuration.dart';
 import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
-import 'package:flutter_survey_js/ui/reactive/reactive_group_button.dart';
 import 'package:group_button/group_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -64,9 +64,13 @@ class _RadioGroupWidgetState extends State<_RadioGroupWidget> {
 
       if (isOtherValue(value)) {
         //current value outside of choices
-        selectbaseController.setOtherValue(value?.toString() ?? "");
         if (selectbaseController.storeOtherAsComment) {
           control.value = otherValue;
+          if (value?.toString() != otherValue) {
+            selectbaseController.setOtherValue(value?.toString() ?? "");
+          }
+        } else {
+          selectbaseController.setOtherValue(value?.toString() ?? "");
         }
       }
     });
