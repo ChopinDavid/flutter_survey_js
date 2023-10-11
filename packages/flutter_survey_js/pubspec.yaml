@@ -34,7 +34,7 @@ dependencies:
   built_value: ">=8.4.0 <9.0.0"
   built_collection: ">=5.1.1 <6.0.0"
   intl: ^0.18.0
-  appinio_video_player: ^1.2.1
+#  appinio_video_player: ^1.2.1
   path: ^1.8.3
   async: ^2.11.0
   collection: ^1.17.1
