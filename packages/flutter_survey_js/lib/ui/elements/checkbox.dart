@@ -54,30 +54,27 @@ class _CheckBoxElementState extends State<CheckBoxElement> {
       widget.element.choices?.map((p0) => p0.castToItemvalue()).toList() ?? [];
 
   void resetOtherItem(FormArray<Object?> formArray) {
-    Future.microtask(() {
-      //set other value
-      if (otherController.showNone &&
-          formArray.controls.any((e) => e.value == noneValue)) {
-        otherController.setShowOther(false);
-        return;
-      }
+    if (otherController.showNone &&
+        formArray.controls.any((e) => e.value == noneValue)) {
+      otherController.setShowOther(false);
+      return;
+    }
 
-      //outside choice value. treat as other value
-      AbstractControl<Object?>? otherValueControl =
-          findPossibleOtherValueControl(formArray);
-      if (otherController.storeOtherAsComment) {
-        otherController
-            .setShowOther(formArray.controls.any((c) => c.value == otherValue));
-        if (otherValueControl != null &&
-            otherValueControl.value.toString() != otherValue) {
-          otherController.setOtherValue(otherValueControl.value.toString());
-        }
-      } else {
-        if (otherValueControl != null) {
-          otherController.setOtherValue(otherValueControl.value.toString());
-        }
+    //outside choice value. treat as other value
+    AbstractControl<Object?>? otherValueControl =
+        findPossibleOtherValueControl(formArray);
+    if (otherController.storeOtherAsComment) {
+      otherController
+          .setShowOther(formArray.controls.any((c) => c.value == otherValue));
+      if (otherValueControl != null &&
+          otherValueControl.value.toString() != otherValue) {
+        otherController.setOtherValue(otherValueControl.value.toString());
       }
-    });
+    } else {
+      if (otherValueControl != null) {
+        otherController.setOtherValue(otherValueControl.value.toString());
+      }
+    }
   }
 
   AbstractControl<Object?>? findPossibleOtherValueControl(
@@ -98,13 +95,13 @@ class _CheckBoxElementState extends State<CheckBoxElement> {
 
   @override
   void initState() {
-    super.initState();
     otherController = SelectbaseController(element: widget.element);
 
     var formArray = getFormArray();
 
     resetOtherItem(formArray);
     formArray.markAsUntouched();
+    super.initState();
   }
 
   void addOther() {
