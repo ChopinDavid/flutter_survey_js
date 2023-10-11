@@ -22,11 +22,11 @@ Widget urlToImage(String? link, {double? width, double? height}) {
     if (url.data != null && url.data!.isBase64) {
       inner = Image.memory(url.data!.contentAsBytes(), gaplessPlayback: true);
     } else if (url.isAbsolute) {
-      if (UrlTypeHelper.getType(url) == UrlType.video) {
-        inner = VideoWidget(uri: url);
-      } else {
-        inner = Image.network(link, gaplessPlayback: true);
-      }
+      // if (UrlTypeHelper.getType(url) == UrlType.video) {
+      //   inner = VideoWidget(uri: url);
+      // } else {
+      inner = Image.network(link, gaplessPlayback: true);
+      // }
     }
 
     return SizedBox(
