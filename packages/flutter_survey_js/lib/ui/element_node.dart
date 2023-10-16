@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_survey_js/flutter_survey_js.dart' as s;
 import 'package:flutter_survey_js/ui/elements/matrix_dropdown_base.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_survey_js/ui/survey_element_factory.dart';
 import 'package:flutter_survey_js/ui/validators.dart';
 import 'package:flutter_survey_js_model/flutter_survey_js_model.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:collection/collection.dart';
 
 import 'elements/multiple_text.dart';
 
@@ -598,7 +598,7 @@ void constructElementNode(BuildContext context, ElementNode node,
           value: value, validators: validators);
     }
 
-    if (nodeElement is s.Selectbase) {
+    if (nodeElement is s.Selectbase && (nodeElement.showOtherItem ?? false)) {
       final commentName = "${nodeElement.name}-Comment";
       final commentNode =
           ElementNode(element: null, rawElement: null, survey: node.survey);

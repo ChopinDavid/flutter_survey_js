@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_survey_js/ui/elements/selectbase.dart';
-import 'package:flutter_survey_js/ui/survey_configuration.dart';
-import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:flutter_survey_js/ui/reactive/reactive_group_button.dart';
+import 'package:flutter_survey_js/ui/survey_configuration.dart';
+import 'package:flutter_survey_js/utils.dart';
+import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:group_button/group_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:flutter_survey_js/utils.dart';
+
 import '../../generated/l10n.dart';
 
 Widget radioGroupBuilder(BuildContext context, s.Elementbase element,
@@ -58,7 +59,8 @@ class _RadioGroupWidgetState extends State<_RadioGroupWidget> {
     Future.microtask(() {
       final control = getCurrentControl();
       final value = control.value;
-      if (selectbaseController.storeOtherAsComment) {
+      if (selectbaseController.storeOtherAsComment &&
+          selectbaseController.showOther) {
         selectbaseController.setShowOther(value == otherValue);
       }
 
@@ -129,8 +131,6 @@ class _RadioGroupWidgetState extends State<_RadioGroupWidget> {
                   selectbaseController
                       .setShowOther(isOtherValue(control.value));
                 }
-              } else {
-                selectbaseController.setShowOther(false);
               }
               if (widget.element.showNoneItem ?? false) {
                 if (control.value == noneValue) {
