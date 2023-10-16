@@ -54,28 +54,26 @@ class _RadioGroupWidgetState extends State<_RadioGroupWidget> {
   late SelectbaseController selectbaseController;
   @override
   void initState() {
-    super.initState();
     selectbaseController = SelectbaseController(element: widget.element);
-    Future.microtask(() {
-      final control = getCurrentControl();
-      final value = control.value;
-      if (selectbaseController.storeOtherAsComment &&
-          selectbaseController.showOther) {
-        selectbaseController.setShowOther(value == otherValue);
-      }
+    final control = getCurrentControl();
+    final value = control.value;
+    if (selectbaseController.storeOtherAsComment &&
+        (selectbaseController.element.showOtherItem ?? false)) {
+      selectbaseController.setShowOther(value == otherValue);
+    }
 
-      if (isOtherValue(value)) {
-        //current value outside of choices
-        if (selectbaseController.storeOtherAsComment) {
-          control.value = otherValue;
-          if (value?.toString() != otherValue) {
-            selectbaseController.setOtherValue(value?.toString() ?? "");
-          }
-        } else {
+    if (isOtherValue(value)) {
+      //current value outside of choices
+      if (selectbaseController.storeOtherAsComment) {
+        control.value = otherValue;
+        if (value?.toString() != otherValue) {
           selectbaseController.setOtherValue(value?.toString() ?? "");
         }
+      } else {
+        selectbaseController.setOtherValue(value?.toString() ?? "");
       }
-    });
+    }
+    super.initState();
   }
 
   @override
