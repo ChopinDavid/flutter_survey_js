@@ -604,10 +604,8 @@ void constructElementNode(BuildContext context, ElementNode node,
           ElementNode(element: null, rawElement: null, survey: node.survey);
       //always add comment control for selectbase, so that the answer patch will work
       node.parent!.addChild(commentNode);
-      (node.parent!.control as FormGroup).addAll({
-        commentName: fb.control<String>(
-            "", [if (nodeElement.isRequired ?? false) NonEmptyValidator.get])
-      });
+      (node.parent!.control as FormGroup)
+          .addAll({commentName: fb.control<String>("", [])});
     }
 
     if (nodeElement is s.Panelbase) {
