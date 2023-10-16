@@ -58,7 +58,8 @@ class _RadioGroupWidgetState extends State<_RadioGroupWidget> {
     Future.microtask(() {
       final control = getCurrentControl();
       final value = control.value;
-      if (selectbaseController.storeOtherAsComment) {
+      if (selectbaseController.storeOtherAsComment &&
+          selectbaseController.showOther) {
         selectbaseController.setShowOther(value == otherValue);
       }
 
@@ -125,8 +126,6 @@ class _RadioGroupWidgetState extends State<_RadioGroupWidget> {
                   selectbaseController
                       .setShowOther(isOtherValue(control.value));
                 }
-              } else {
-                selectbaseController.setShowOther(false);
               }
               if (widget.element.showNoneItem ?? false) {
                 if (control.value == noneValue) {
