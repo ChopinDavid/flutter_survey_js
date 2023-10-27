@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_survey_js/flutter_survey_js.dart' as s;
 import 'package:flutter_survey_js/ui/elements/matrix_dropdown_base.dart';
