@@ -596,17 +596,6 @@ void constructElementNode(BuildContext context, ElementNode node,
           value: value, validators: validators);
     }
 
-    if (nodeElement is s.Selectbase && nodeElement.showOtherItem == true) {
-      final commentName = "${nodeElement.name}-Comment";
-      final commentNode =
-          ElementNode(element: null, rawElement: null, survey: node.survey);
-      //always add comment control for selectbase, so that the answer patch will work
-      node.parent!.addChild(commentNode);
-      (node.parent!.control as FormGroup).addAll({
-        commentName: fb.control<String>("", [NonEmptyValidator.get])
-      });
-    }
-
     if (nodeElement is s.Panelbase) {
       if (node.control is FormGroup) {
         (node.parent!.control as FormGroup)
