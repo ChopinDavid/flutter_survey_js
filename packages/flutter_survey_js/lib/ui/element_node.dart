@@ -596,7 +596,7 @@ void constructElementNode(BuildContext context, ElementNode node,
           value: value, validators: validators);
     }
 
-    if (nodeElement is s.Selectbase) {
+    if (nodeElement is s.Selectbase && nodeElement.showOtherItem == true) {
       final commentName = "${nodeElement.name}-Comment";
       final commentNode =
           ElementNode(element: null, rawElement: null, survey: node.survey);

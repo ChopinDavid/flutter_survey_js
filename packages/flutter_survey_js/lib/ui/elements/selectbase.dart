@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_survey_js/generated/l10n.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:flutter_survey_js/utils.dart';
+import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
+import 'package:reactive_forms/reactive_forms.dart';
 
 const otherValue = "other";
 const noneValue = "none";
@@ -104,6 +104,9 @@ class SelectbaseController extends ChangeNotifier {
   String get otherValue => storeOtherAsComment ? "" : _otherTextController.text;
 
   void setShowOther(bool value) {
+    if (!(element.showOtherItem == true)) {
+      return;
+    }
     _showOther = value;
     final name = getCommentName();
     if (_showOther) {
