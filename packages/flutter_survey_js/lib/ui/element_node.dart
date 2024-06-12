@@ -232,6 +232,18 @@ class ElementNode {
           visibleIf = s.getRunner().runCondition(e.visibleIf!, newValues,
                   properties: newProperties) ??
               true;
+
+          if (visibleIf == false) {
+            control?.markAsDisabled();
+            if (element is s.Selectbase &&
+                (element as s.Selectbase).showOtherItem == true) {
+              (control?.parent as FormGroup)
+                  .findControl('${(element as s.Selectbase).name}-Comment')
+                  ?.markAsDisabled();
+            }
+          } else {
+            control?.markAsEnabled();
+          }
         }
         if (e.defaultValueExpression?.isNotEmpty ?? false) {
           defaultValue = s.getRunner().runExpression(
