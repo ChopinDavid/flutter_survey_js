@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_survey_js/generated/l10n.dart';
-import 'package:flutter_survey_js/ui/validators.dart';
 import 'package:flutter_survey_js/utils.dart';
 import 'package:flutter_survey_js_model/flutter_survey_js_model.dart' as s;
 import 'package:reactive_forms/reactive_forms.dart';
@@ -110,12 +109,6 @@ class SelectbaseController extends ChangeNotifier {
     }
     _showOther = value;
     final name = getCommentName();
-    // TODO(DC): Maybe write tests around ensuring that "$name-comment" controls are not added to the form group if element.showOtherItem == false
-    if (_fg.findControl(name) == null) {
-      _fg.addAll({
-        name: fb.control<String>("", [NonEmptyValidator.get])
-      });
-    }
     if (_showOther) {
       _fg.control(name).markAsEnabled();
     } else {

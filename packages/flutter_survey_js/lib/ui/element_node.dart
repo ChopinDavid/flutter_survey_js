@@ -545,10 +545,9 @@ void constructElementNode(BuildContext context, ElementNode node,
       final panelControl = surveyfb.group({}, validators, asyncValidators);
       node.control = panelControl;
       for (var panelIndex = 0; panelIndex < questions.length; panelIndex++) {
+        final question = questions[panelIndex];
         final questionNode = ElementNode(
-            element: questions[panelIndex],
-            rawElement: questions[panelIndex],
-            survey: node.survey);
+            element: question, rawElement: question, survey: node.survey);
         node.addChild(questionNode);
         questionNode.dynamicPanelIndex = panelIndex;
         constructElementNode(context, questionNode,
@@ -558,10 +557,14 @@ void constructElementNode(BuildContext context, ElementNode node,
                 ? value
                 : tryGetValue(questionNode.element!.name!, value));
         //panel name could be null, and all of it's controls will be handled later
-        if (questions[panelIndex].name != null &&
-            questionNode.control != null) {
-          panelControl
-              .addAll({questions[panelIndex].name!: questionNode.control!});
+        if (question.name != null && questionNode.control != null) {
+          panelControl.addAll({question.name!: questionNode.control!});
+          if (question is s.Selectbase && question.showOtherItem == true) {
+            panelControl.addAll({
+              '${question.name!}-Comment':
+                  fb.control<String>("", [NonEmptyValidator.get])
+            });
+          }
         }
       }
     } else if (nodeElement is s.Multipletext) {
