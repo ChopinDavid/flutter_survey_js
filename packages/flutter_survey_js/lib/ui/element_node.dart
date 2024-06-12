@@ -232,6 +232,18 @@ class ElementNode {
           visibleIf = s.getRunner().runCondition(e.visibleIf!, newValues,
                   properties: newProperties) ??
               true;
+
+          if (visibleIf == false) {
+            control?.markAsDisabled();
+            if (element is s.Selectbase &&
+                (element as s.Selectbase).showOtherItem == true) {
+              (control?.parent as FormGroup)
+                  .findControl('${(element as s.Selectbase).name}-Comment')
+                  ?.markAsDisabled();
+            }
+          } else {
+            control?.markAsEnabled();
+          }
         }
         if (e.defaultValueExpression?.isNotEmpty ?? false) {
           defaultValue = s.getRunner().runExpression(
@@ -594,17 +606,6 @@ void constructElementNode(BuildContext context, ElementNode node,
     } else {
       node.control = toFormObject(context, node.element!,
           value: value, validators: validators);
-    }
-
-    if (nodeElement is s.Selectbase && nodeElement.showOtherItem == true) {
-      final commentName = "${nodeElement.name}-Comment";
-      final commentNode =
-          ElementNode(element: null, rawElement: null, survey: node.survey);
-      //always add comment control for selectbase, so that the answer patch will work
-      node.parent!.addChild(commentNode);
-      (node.parent!.control as FormGroup).addAll({
-        commentName: fb.control<String>("", [NonEmptyValidator.get])
-      });
     }
 
     if (nodeElement is s.Panelbase) {
