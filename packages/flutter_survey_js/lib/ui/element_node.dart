@@ -562,7 +562,7 @@ void constructElementNode(BuildContext context, ElementNode node,
           if (question is s.Selectbase && question.showOtherItem == true) {
             panelControl.addAll({
               '${question.name!}-Comment':
-                  fb.control<String>("", [NonEmptyValidator.get])
+                  fb.control<String>("", [NonEmptyValidator()])
             });
           }
         }
